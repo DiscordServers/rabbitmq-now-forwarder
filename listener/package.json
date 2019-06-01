@@ -1,0 +1,45 @@
+{
+    "name":            "@discordservers/rabbitmq-now-forwarder-listener",
+    "version":         "1.0.0",
+    "description":     "Forward your RabbitMQ messages to a Zeit Now endpoint",
+    "scripts":         {
+        "dev":      "ts-node-dev src/index.ts",
+        "build":    "tsc",
+        "start":    "node dist/index.js",
+        "prettier": "prettier --write --single-quote './src/**/*.ts'"
+    },
+    "publishConfig":   {
+        "access": "public"
+    },
+    "repository":      {
+        "type": "git",
+        "url":  "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
+    },
+    "authors":         [
+        {
+            "name":  "aequasi",
+            "email": "aequasi@gmail.com"
+        },
+        {
+            "name": "arunesh"
+        }
+    ],
+    "license":         "MIT",
+    "bugs":            {
+        "url": "https://github.com/DiscordServers/rabbitmq-now-forwarder/issues"
+    },
+    "homepage":        "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
+    "dependencies":    {
+        "@zeit/integration-utils": "^0.6.1",
+        "micro":                   "^9.3.4",
+        "ts-node-dev":             "^1.0.0-pre.39"
+    },
+    "devDependencies": {
+        "@types/micro":     "^7.3.3",
+        "@types/node":      "^12.0.4",
+        "@types/prettier":  "^1.16.4",
+        "prettier":         "^1.17.1",
+        "reflect-metadata": "^0.1.13",
+        "typescript":       "^3.5.1"
+    }
+}
