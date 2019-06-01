@@ -15,6 +15,7 @@ export default withUiHook(async (handler) => {
     }
 
     // Return main screen by default
+    payload.clientState = {};
     const instances = await getInstances(handler);
 
     return htm`
