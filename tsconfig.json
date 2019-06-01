@@ -9,6 +9,7 @@
         "preserveConstEnums":           true,
         "sourceMap":                    true,
         "incremental":                  true,
+        "tsBuildInfoFile":              "./buildcache",
         "skipLibCheck":                 true,
         "experimentalDecorators":       true,
         "emitDecoratorMetadata":        true,

@@ -1,43 +1,42 @@
 {
-    "name": "@discordservers/rabbitmq-now-forwarder",
-    "version": "1.0.0",
-    "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
-    "scripts": {
-        "prepublishOnly": "npm run build",
-        "build": "tsc",
-        "watch": "tsc --watch",
-        "test": "tsc",
-        "prettier": "prettier --write --single-quote './{src,test}/**/*.ts'"
+    "name":            "@discordservers/rabbitmq-now-forwarder",
+    "version":         "1.0.0",
+    "description":     "Forward your RabbitMQ messages to a Zeit Now endpoint",
+    "scripts":         {
+        "dev":      "now dev",
+        "prettier": "prettier --write --single-quote './src/**/*.ts'"
     },
-    "publishConfig": {
+    "publishConfig":   {
         "access": "public"
     },
-    "repository": {
+    "repository":      {
         "type": "git",
-        "url": "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
+        "url":  "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
     },
-    "authors": [
+    "authors":         [
         {
-            "name": "aequasi",
+            "name":  "aequasi",
             "email": "aequasi@gmail.com"
         },
         {
             "name": "arunesh"
         }
     ],
-    "license": "MIT",
-    "bugs": {
+    "license":         "MIT",
+    "bugs":            {
         "url": "https://github.com/DiscordServers/rabbitmq-now-forwarder/issues"
     },
-    "homepage": "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
-    "dependencies": {
+    "homepage":        "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
+    "dependencies":    {
         "@zeit/integration-utils": "^0.6.1",
-        "micro": "^9.3.4"
+        "micro":                   "^9.3.4"
     },
     "devDependencies": {
-        "@types/micro": "^7.3.3",
-        "@types/node": "^12.0.4",
-        "prettier": "^1.17.1",
-        "typescript": "^3.5.1"
+        "@types/micro":     "^7.3.3",
+        "@types/node":      "^12.0.4",
+        "@types/prettier":  "^1.16.4",
+        "prettier":         "^1.17.1",
+        "reflect-metadata": "^0.1.13",
+        "typescript":       "^3.5.1"
     }
 }
