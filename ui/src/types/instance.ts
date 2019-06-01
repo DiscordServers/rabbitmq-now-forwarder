@@ -1,4 +1,4 @@
-export interface instance {
+export interface instanceOptions {
     name?: string;
     host: string;
     port: string;

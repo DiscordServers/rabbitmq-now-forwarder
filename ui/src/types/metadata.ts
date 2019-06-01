@@ -6,7 +6,7 @@ export interface metadataListener {
 export interface metadataInstance {
     id: string;
     name: string;
-    // connection_secret: string;
+    connection_secret: string;
     // private_key_secret: string;
     // public_key: string;
     // listeners: metadataListener[];
