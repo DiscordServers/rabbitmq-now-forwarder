@@ -1,0 +1,29 @@
+{
+    "compileOnSave":   false,
+    "compilerOptions": {
+        "target":                       "esnext",
+        "module":                       "commonjs",
+        "moduleResolution":             "node",
+        "allowSyntheticDefaultImports": true,
+        "removeComments":               false,
+        "preserveConstEnums":           true,
+        "sourceMap":                    true,
+        "incremental":                  true,
+        "skipLibCheck":                 true,
+        "experimentalDecorators":       true,
+        "emitDecoratorMetadata":        true,
+        "noImplicitAny":                false,
+        "lib":                          [
+            "es2017",
+            "esnext"
+        ],
+        "typeRoots":                    [
+            "./node_modules/@types",
+            "./@types"
+        ],
+        "types":                        [
+            "node",
+            "reflect-metadata"
+        ]
+    }
+}
