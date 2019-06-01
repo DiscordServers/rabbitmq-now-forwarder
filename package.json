@@ -1,0 +1,25 @@
+{
+    "name":        "@discordservers/rabbitmq-now-forwarder",
+    "version":     "1.0.0",
+    "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
+    "scripts":     {
+    },
+    "repository":  {
+        "type": "git",
+        "url":  "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
+    },
+    "authors":     [
+        {
+            "name":  "aequasi",
+            "email": "aequasi@gmail.com"
+        },
+        {
+            "name": "arunesh"
+        }
+    ],
+    "license":     "MIT",
+    "bugs":        {
+        "url": "https://github.com/DiscordServers/rabbitmq-now-forwarder/issues"
+    },
+    "homepage":    "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme"
+}
