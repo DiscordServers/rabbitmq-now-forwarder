@@ -23,14 +23,27 @@ export async function addListener (
     queue
   }
 
-  for (let i = 0; i < metadata.instances.length; i++) {
-    const instance = metadata.instances[i]
+  const instanceIndex = metadata.instances.findIndex((instance) => {
+    return instance.id === instanceId
+  })
+  metadata.instances[instanceIndex].listeners.push(listener)
 
-    if (instance.id === instanceId) {
-      metadata.instances[i].listeners.push(listener)
-      break
-    }
-  }
+  await zeitClient.setMetadata(metadata)
+  return
+}
+
+export async function deleteListener (
+  instanceId: string,
+  listenerIndex: string,
+  handler: HandlerOptions
+) {
+  const {zeitClient} = handler;
+  let metadata: nowMetadata = await zeitClient.getMetadata()
+
+  const instanceIndex = metadata.instances.findIndex((instance) => {
+    return instance.id === instanceId
+  })
+  metadata.instances[instanceIndex].listeners.splice(parseInt(listenerIndex), 1)
 
   await zeitClient.setMetadata(metadata)
   return
