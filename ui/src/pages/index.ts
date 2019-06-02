@@ -5,6 +5,10 @@ import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 import createPage from './create';
 import viewInstance from './viewInstance';
 
+const formStore = {
+    emailNotifications: false,
+};
+
 function startsWithAny(search, ...strings) {
     for (const string of strings) {
         if (search.startsWith(string)) {
@@ -17,12 +21,21 @@ function startsWithAny(search, ...strings) {
 
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
-    const {action} = payload;
+    const {action, clientState} = payload;
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
     const publicKey = await getGeneratedKey(payload.configurationId);
     console.log(payload, metadata, publicKey);
+
+    if (!metadata.preferences) {
+        metadata.preferences = {
+            email_notifications: formStore.emailNotifications,
+        };
+        await zeitClient.setMetadata(metadata);
+    }
+
+    formStore.emailNotifications = metadata.preferences.email_notifications;
 
     switch (true) {
         case ['add-instance', 'submit-instance'].includes(action):
@@ -45,6 +58,17 @@ export default withUiHook(async (handler) => {
                 </Notice>`;
             }
 
+            break;
+        case action === 'update-preferences':
+            formStore.emailNotifications = clientState.emailNotifications;
+            metadata.preferences.email_notifications = clientState.emailNotifications;
+
+            await zeitClient.setMetadata(metadata);
+            notice = htm`
+                <Notice type="success">
+                    Successfully updated your preferences
+                </Notice>
+            `;
             break;
     }
 
@@ -80,6 +104,37 @@ export default withUiHook(async (handler) => {
                         `;
                     })}
                 </${Table}>
+            </Box>
+
+            <Box display="flex" justify-content="space-between">
+                <Box width="48%">
+                    <H1>Preferences</H1>
+                    <Fieldset>
+                        <FsContent>
+                            <Box>
+                                <Checkbox name="emailNotifications" label="Email Notifications" checked=${
+                                    formStore.emailNotifications
+                                } />
+                                <Box font-style="italic">
+                                    We will disable listeners that go over 20% in failure responses in a 30 minute period. To be notified when this happens, please check this box.
+                                </Box>
+                            </Box>
+                        </FsContent>
+                        <FsFooter>
+                            <Button action="update-preferences" value=${formStore.emailNotifications}>Update</Button>
+                        </FsFooter>
+                    </Fieldset>
+                </Box>
+                <Box width="48%">
+                    <H1>Public Key</H1>
+                    <Fieldset>
+                        <FsContent>
+                            <Textarea width="100%" disabled>
+                                ${publicKey}
+                            </Textarea>
+                        </FsContent>
+                    </Fieldset>
+                </Box>
             </Box>
         </Page>
     `;
