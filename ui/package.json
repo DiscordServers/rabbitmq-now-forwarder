@@ -1,43 +1,45 @@
 {
-    "name":            "@discordservers/rabbitmq-now-forwarder",
-    "version":         "1.0.0",
-    "description":     "Forward your RabbitMQ messages to a Zeit Now endpoint",
-    "scripts":         {
-        "dev":      "now dev",
+    "name": "@discordservers/rabbitmq-now-forwarder",
+    "version": "1.0.0",
+    "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
+    "scripts": {
+        "dev": "now dev",
         "prettier": "prettier --write --single-quote './src/**/*.ts'"
     },
-    "publishConfig":   {
+    "publishConfig": {
         "access": "public"
     },
-    "repository":      {
+    "repository": {
         "type": "git",
-        "url":  "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
+        "url": "git+https://github.com/DiscordServers/rabbitmq-now-forwarder.git"
     },
-    "authors":         [
+    "authors": [
         {
-            "name":  "aequasi",
+            "name": "aequasi",
             "email": "aequasi@gmail.com"
         },
         {
-            "name":  "arunesh90",
+            "name": "arunesh90",
             "email": "hello@arunesh.me"
         }
     ],
-    "license":         "MIT",
-    "bugs":            {
+    "license": "MIT",
+    "bugs": {
         "url": "https://github.com/DiscordServers/rabbitmq-now-forwarder/issues"
     },
-    "homepage":        "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
-    "dependencies":    {
+    "homepage": "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
+    "dependencies": {
         "@zeit/integration-utils": "^0.6.1",
-        "micro":                   "^9.3.4"
+        "micro": "^9.3.4",
+        "uuid": "^3.3.2"
     },
     "devDependencies": {
-        "@types/micro":     "^7.3.3",
-        "@types/node":      "^12.0.4",
-        "@types/prettier":  "^1.16.4",
-        "prettier":         "^1.17.1",
+        "@types/micro": "^7.3.3",
+        "@types/node": "^12.0.4",
+        "@types/prettier": "^1.16.4",
+        "@types/uuid": "^3.4.4",
+        "prettier": "^1.17.1",
         "reflect-metadata": "^0.1.13",
-        "typescript":       "^3.5.1"
+        "typescript": "^3.5.1"
     }
 }

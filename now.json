@@ -2,7 +2,7 @@
     "name": "rabbitmq-now-forwarder",
     "version": 2,
     "builds": [
-        {"src": "ui/src/index.ts", "use": "@now/node"}
+        {"src": "**/*.ts", "use": "@now/node"}
     ],
     "routes": [
         {"src": "/", "dest": "ui/src/index.ts"}
