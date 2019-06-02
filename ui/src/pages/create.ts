@@ -77,7 +77,7 @@ export default async function createPage(handler: HandlerOptions) {
                                 <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
                             </Box>
                             <Box padding-right="10px">
-                                <Input label="Instance Virtual Host" name="instanceVhost" value=${
+                                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${
                                     formStore.instanceVhost
                                 } />
                             </Box>
