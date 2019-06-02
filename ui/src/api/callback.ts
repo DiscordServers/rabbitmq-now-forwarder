@@ -69,8 +69,6 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         installationId: json.installation_id,
     };
 
-    console.log({document, query});
-
     await collection.insertOne(document);
 
     res.statusCode = 301;
