@@ -3,6 +3,39 @@ import {HandlerOptions} from '@zeit/integration-utils';
 import nowMetadata, {metadataInstance} from '../types/metadata';
 const uuid = require('uuid/v4');
 
+export async function addListener (
+  instanceId: string,
+  endpoint: string,
+  queue: string,
+  handler: HandlerOptions
+) {
+  if (!endpoint) {
+    throw new Error('Missing endpoint')
+  } if (!queue) {
+    throw new Error('Missing queue')
+  }
+
+  const {zeitClient} = handler;
+  let metadata: nowMetadata = await zeitClient.getMetadata()
+
+  const listener = {
+    endpoint,
+    queue
+  }
+
+  for (let i = 0; i < metadata.instances.length; i++) {
+    const instance = metadata.instances[i]
+
+    if (instance.id === instanceId) {
+      metadata.instances[i].listeners.push(listener)
+      break
+    }
+  }
+
+  await zeitClient.setMetadata(metadata)
+  return
+}
+
 export async function addInstance(
     instanceOptions: instanceOptions,
     handler: HandlerOptions,
@@ -37,6 +70,7 @@ export async function addInstance(
         id: instanceId,
         name: instanceOptions.name,
         connection_secret: optionsSecret,
+        listeners: []
     };
 
     metadata.instances.push(metadataInstance);
