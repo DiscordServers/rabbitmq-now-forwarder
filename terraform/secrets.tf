@@ -4,6 +4,7 @@ resource "aws_secretsmanager_secret" "zeit" {
 
 	tags = {
 		Terraform = "true"
+		App       = "RNF"
 	}
 }
 

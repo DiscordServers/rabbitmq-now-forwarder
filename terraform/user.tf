@@ -27,6 +27,11 @@ data "aws_iam_policy_document" "resource_groups" {
 # User
 resource "aws_iam_user" "_" {
     name = "rabbitmq-now-forwarder"
+
+    tags = {
+        Terraform = "true"
+        App       = "RNF"
+    }
 }
 
 resource "aws_iam_access_key" "_" {

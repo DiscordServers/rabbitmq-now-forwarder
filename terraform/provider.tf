@@ -15,3 +15,10 @@ provider "cloudflare" {
     token = var.cloudflare_token
 }
 
+# -----------------------------------------------------
+# Github
+# -----------------------------------------------------
+provider "github" {
+    token = var.github_token
+    organization = var.github_organization
+}
