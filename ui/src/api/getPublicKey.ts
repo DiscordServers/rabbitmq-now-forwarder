@@ -9,5 +9,5 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
 
     const config: Configuration = await collection.findOne<Configuration>({configurationId: query.configurationId});
 
-    return send(res, 200, config.publicKey);
+    return send(res, config ? 200 : 204, config ? config.publicKey : null);
 }

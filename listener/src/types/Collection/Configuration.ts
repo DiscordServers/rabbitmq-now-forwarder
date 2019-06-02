@@ -1,0 +1,9 @@
+export default interface Configuration {
+    userId: string;
+    teamId?: string;
+    configurationId: string;
+    installationId: string;
+    accessToken: string;
+    privateKey: string;
+    publicKey: string;
+}

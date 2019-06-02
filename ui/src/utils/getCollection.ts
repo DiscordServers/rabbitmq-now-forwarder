@@ -16,11 +16,18 @@ export interface Configuration {
     publicKey: string;
 }
 
-const getCollection = async (): Promise<Collection> => {
+const getCollection = async (): Promise<Collection<Configuration>> => {
     if (!client.isConnected()) {
         await client.connect();
         db = client.db(dbName);
         collection = db.collection<Configuration>('configurations');
+
+        if (!(await collection.indexExists('configurationId'))) {
+            await collection.createIndex('configurationId', {unique: true});
+        }
+        if (!(await collection.indexExists(['userId', 'teamId']))) {
+            await collection.createIndex(['userId', 'teamId']);
+        }
     }
 
     return collection;
