@@ -66,14 +66,10 @@ export async function addInstance(instanceOptions: instanceOptions, handler: Han
         vhost: instanceOptions.vhost || '/',
     };
 
-    const connectionSecret = await zeitClient.ensureSecret(
-        `instance-${instanceId}.connection`,
-        JSON.stringify(instance),
-    );
     const metadataInstance: metadataInstance = {
         id: instanceId,
         name: instanceOptions.name,
-        connection_secret: connectionSecret,
+        connection: instance,
         public_key: await getGeneratedKey(handler.payload.configurationId),
         listeners: [],
     };

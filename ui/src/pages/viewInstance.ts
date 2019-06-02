@@ -8,7 +8,7 @@ let formStore = {
 };
 
 export default async function viewInstance(handler: HandlerOptions) {
-    const {payload} = handler;
+    const {payload, zeitClient} = handler;
     const {action, clientState} = payload;
     let instanceId: string;
     let notice: string | undefined;
@@ -97,18 +97,18 @@ export default async function viewInstance(handler: HandlerOptions) {
 
         <H1>Add listener</H1>
         <Fieldset>
-            <FsContent>
-              <Box display="flex">
-                <Box padding-right="10px">
-                  <Input name="listenerEndpoint" label="Listener Endpoint" value=${formStore.listenerEndpoint} />
-                </Box>
-                <BR />
-                <Input name="listenerQueue" label="Listener Queue" value=${formStore.listenerQueue} />
+          <FsContent>
+            <Box display="flex">
+              <Box padding-right="10px">
+                <Input name="listenerEndpoint" label="Listener Endpoint" value=${formStore.listenerEndpoint} />
               </Box>
-            </FsContent>
-            <FsFooter>
-              <Button action="submit-listener">Add Listener</Button>
-            </FsFooter>
+              <BR />
+              <Input name="listenerQueue" label="Listener Queue" value=${formStore.listenerQueue} />
+            </Box>
+          </FsContent>
+          <FsFooter>
+            <Button action="submit-listener">Add Listener</Button>
+          </FsFooter>
         </Fieldset>
         <Box display="none">
           <Input name="instanceId" value=${instanceId} />
