@@ -204,7 +204,7 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
                 <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
               </Box>
               <Box padding-right="10px">
-                <Input label="Instance Virtual Host" name="instanceVhost" value=${formStore.instanceVhost} />
+                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${formStore.instanceVhost} />
               </Box>
             </Box>
             <Box display="flex">
