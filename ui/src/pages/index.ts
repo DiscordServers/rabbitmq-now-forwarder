@@ -4,6 +4,7 @@ import {deleteInstance, getGeneratedKey, getInstance, getInstances} from '../uti
 import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 import createPage from './create';
 import viewInstance from './viewInstance';
+import {addInstance} from '../utils/instances';
 
 const formStore = {
     emailNotifications: false,
@@ -37,9 +38,47 @@ export default withUiHook(async (handler) => {
     formStore.emailNotifications = metadata.preferences.email_notifications;
 
     switch (true) {
-        case ['add-instance', 'submit-instance'].includes(action):
+        case ['add-instance'].includes(action):
             return createPage(handler);
-        case startsWithAny(action, 'submit-listener', 'update-instance', 'view-instance-', 'delete-listener-'):
+        case startsWithAny(
+            action,
+            'submit-listener',
+            'submit-instance',
+            'update-instance',
+            'view-instance-',
+            'delete-listener-',
+        ):
+            if (action === 'submit-instance') {
+                try {
+                    const newInstance = await addInstance(
+                        {
+                            name: clientState.instanceName,
+                            host: clientState.instanceHost,
+                            port: clientState.instancePort,
+                            vhost: clientState.instanceVhost,
+                            username: clientState.instanceUsername,
+                            password: clientState.instancePassword,
+                        },
+                        handler,
+                    );
+
+                    notice = htm`
+                        <Notice type="success">
+                            Successfully added instance <B>${newInstance.name}</B> with ID <B>${newInstance.id}</B>
+                        </Notice>
+                    `;
+                    return viewInstance(handler, notice, newInstance.id);
+                } catch (error) {
+                    notice = htm`
+                        <Notice type="error">
+                            Failed adding the instance for the following reason: <B>${error.message}</B>
+                        </Notice>
+                    `;
+
+                    return createPage(handler, notice);
+                }
+            }
+
             return viewInstance(handler);
         case action.startsWith('delete-instance'):
             const instanceId = action.substring('delete-instance-'.length);

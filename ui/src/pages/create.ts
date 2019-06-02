@@ -10,10 +10,9 @@ let formStore = {
     instancePassword: '',
 };
 
-export default async function createPage(handler: HandlerOptions) {
+export default async function createPage(handler: HandlerOptions, notice: string = '') {
     const {payload} = handler;
     const {action, clientState} = payload;
-    let notice: string | undefined;
 
     if (action === 'submit-instance') {
         formStore = clientState;

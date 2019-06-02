@@ -15,17 +15,16 @@ let formStore = {
     instancePassword: '',
 };
 
-export default async function viewInstance(handler: HandlerOptions) {
+export default async function viewInstance(handler: HandlerOptions, notice: string = '', manualInstanceId?: string) {
     const {payload, zeitClient} = handler;
     const {action, clientState} = payload;
     let instanceId: string;
-    let notice: string | undefined;
 
-    if (action.startsWith('view-instance')) {
+    if (action.startsWith('view-instance-')) {
         clientState.instanceId = action.substring('view-instance-'.length);
     }
 
-    instanceId = clientState.instanceId;
+    instanceId = manualInstanceId || clientState.instanceId;
 
     if (action === 'update-instance') {
         try {
