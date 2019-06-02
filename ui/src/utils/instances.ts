@@ -26,6 +26,7 @@ export async function addListener(
     let metadata: nowMetadata = await zeitClient.getMetadata();
 
     const listener = {
+        id: uuid(),
         endpoint: options.endpoint,
         queue: options.queue,
         retry_on_failure: options.retry_on_failure,
