@@ -14,6 +14,7 @@
         "ZEIT_HOOK_URL": "https://rabbitnowforwarder.tech/"
     },
     "routes": [
+        {"src": "/test", "dest": "ui/src/api/test.ts"},
         {"src": "/getPublicKey/(.*)", "dest": "ui/src/api/getPublicKey.ts?configurationId=$1"},
         {"src": "/callback", "dest": "ui/src/api/callback.ts"},
         {"src": "/", "dest": "ui/src/pages/index.ts"}
