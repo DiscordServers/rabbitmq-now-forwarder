@@ -7,7 +7,7 @@ let formStore = {
 };
 
 export default async function viewInstance(handler: HandlerOptions) {
-    const {payload, zeitClient} = handler;
+    const {payload} = handler;
     const {action, clientState} = payload;
     let instanceId: string;
     let notice: string | undefined;
