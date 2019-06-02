@@ -1,16 +1,17 @@
 [
     {
         "name":             "listener",
-        "image":            "replace-me",
+        "image":            "${image}",
         "logConfiguration": {
             "logDriver": "awslogs",
             "options":   {
-                "awslogs-create-group": "true",
-                "awslogs-group":        "/ecs/rabbitmq-now-forwarder",
-                "awslogs-region":       "us-east-1",
+                "awslogs-group":         "/ecs/rabbitmq-now-forwarder",
+                "awslogs-region":        "us-east-1",
                 "awslogs-stream-prefix": "ecs-rnf"
             }
         },
-        "essential": true,
+        "essential":        true,
+        "cpu":              512,
+        "memory":           1024
     }
 ]

@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+    pre_build:
+        commands:
+            - docker version
+            # Log In
+            - $(aws ecr get-login --no-include-email --region us-east-1)
+            - echo $REPO_URL
+            - echo $BRANCH
+            - docker pull $REPO_URL:$BRANCH || true
+    build:
+        commands:
+            - docker build --pull --cache-from $REPO_URL:$BRANCH --tag $REPO_URL:$BRANCH listener
+    post_build:
+        commands:
+            - docker push $REPO_URL
