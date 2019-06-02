@@ -6,7 +6,8 @@ data "template_file" "task_definition-service" {
     template = file("task-definitions/service.json")
 
     vars = {
-        "image" = "${aws_ecr_repository._.repository_url}:master"
+        "image"                = "${aws_ecr_repository._.repository_url}:master"
+        "mongo_url_secret_arn" = aws_secretsmanager_secret_version.database.arn
     }
 }
 
@@ -104,6 +105,7 @@ resource "aws_iam_role_policy_attachment" "service_role_policy" {
 
 data "aws_iam_policy_document" "ecs_task_role" {
     statement {
+        sid       = "1"
         effect    = "Allow"
         actions   = [
             "ecr:GetAuthorizationToken",
@@ -123,6 +125,16 @@ data "aws_iam_policy_document" "ecs_task_role" {
             "elasticloadbalancing:*",
         ]
         resources = ["*"]
+    }
+
+    statement {
+        sid     = "2"
+        effect  = "Allow"
+        actions = [
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:DescribeSecret"
+        ]
+        resources = [aws_secretsmanager_secret.database.arn]
     }
 }
 

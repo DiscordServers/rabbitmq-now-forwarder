@@ -1,6 +1,9 @@
 export interface Listener {
+    id: string;
     queue: string;
     endpoint: string;
+    expected_status_code?: number;
+    retry_on_failure: boolean;
 }
 
 export interface Instance {
@@ -17,7 +20,12 @@ export interface Instance {
     listeners: Listener[];
 }
 
+export interface Preferences {
+    email_notifications: boolean;
+}
+
 export default interface Metadata {
     instances: Instance[];
+    preferences: Preferences;
     error?: any;
 }

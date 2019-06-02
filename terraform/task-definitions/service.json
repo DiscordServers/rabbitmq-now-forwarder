@@ -10,6 +10,9 @@
                 "awslogs-stream-prefix": "ecs-rnf"
             }
         },
+        "secrets": [
+            {"name": "MONGO_URL", "valueFrom": "${mongo_url_secret_arn}"}
+        ],
         "essential":        true,
         "cpu":              512,
         "memory":           1024
