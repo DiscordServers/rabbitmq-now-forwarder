@@ -1,10 +1,18 @@
 {
     "name": "rabbitmq-now-forwarder",
+    "alias": ["rabbitnowforwarder.tech"],
+    "region": ["all"],
     "version": 2,
     "builds": [
         {"src": "**/*.ts", "use": "@now/node"}
     ],
+    "env": {
+        "ZEIT_CLIENT_ID": "@ZEIT_CLIENT_ID",
+        "ZEIT_CLIENT_SECRET": "@ZEIT_CLIENT_SECRET",
+        "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback"
+    },
     "routes": [
+        {"src": "/callback", "dest": "ui/src/api/callback.ts"},
         {"src": "/", "dest": "ui/src/pages/index.ts"}
     ]
 }

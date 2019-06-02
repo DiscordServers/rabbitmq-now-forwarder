@@ -8,7 +8,10 @@ data "aws_iam_policy_document" "secrets" {
         ]
         effect  = "Allow"
 
-        resources = [aws_secretsmanager_secret.zeit.arn]
+        resources = [
+            aws_secretsmanager_secret.zeit.arn,
+            aws_secretsmanager_secret.database.arn
+        ]
     }
 }
 

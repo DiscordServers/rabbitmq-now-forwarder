@@ -7,8 +7,10 @@ output "sm_secret_access_key" {
 
 locals {
     env = <<EOF
-sm_access_key_id = "${aws_iam_access_key._.id}"
-sm_secret_access_key = "${aws_iam_access_key._.secret}"
+MONGO_URL = "${var.mongo_url}"
+ZEIT_CLIENT_ID = "${var.zeit_client_id}"
+ZEIT_CLIENT_SECRET = "${var.zeit_client_secret}"
+ZEIT_CLIENT_REDIRECT_URI = "http://localhost:3000/callback"
 EOF
 }
 

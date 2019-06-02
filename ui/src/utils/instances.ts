@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import {HandlerOptions} from '@zeit/integration-utils';
 import {instanceOptions} from '../types/instance';
 import nowMetadata, {metadataInstance} from '../types/metadata';

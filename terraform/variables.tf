@@ -56,6 +56,10 @@ variable "ecr_repository" {
     description = "ECR Repository Name"
 }
 
+variable "mongo_url" {
+    description = "The Mongo URL for the configuration DB"
+}
+
 
 # -----------------------------------------------------
 # Autoscaling
@@ -84,4 +88,19 @@ variable "ecs_as_cpu_low_threshold_per" {
 # the number of containers will be increased (but not above ecs_autoscale_max_instances).
 variable "ecs_as_cpu_high_threshold_per" {
     default = "80"
+}
+
+# -----------------------------------------------------
+# Zeit
+# -----------------------------------------------------
+variable "zeit_token" {
+    description = "Zeit API Token"
+}
+variable "zeit_client_id" {
+    description = "Unused"
+    default = ""
+}
+variable "zeit_client_secret" {
+    description = "Unused"
+    default = ""
 }
