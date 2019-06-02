@@ -8,7 +8,7 @@ const processMessage = (configuration: Configuration, instance: Instance, channe
     msg: ConsumeMessage | null,
 ): any => {
     const key = new NodeRSA(configuration.privateKey);
-    const signature = 'sfasdfsdfsdfasdfasdf'; //key.sign(msg.content.toString(), 'base64') + 'aaa';
+    const signature = key.sign(msg.content.toString(), 'base64');
 
     const body = {
         message:    msg.content.toString(),
