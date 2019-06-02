@@ -11,41 +11,45 @@ export async function addListener(
     queue: string,
     handler: HandlerOptions,
 ) {
-  if (!endpoint) {
-    throw new Error('Missing endpoint')
-  } if (!queue) {
-    throw new Error('Missing queue')
-  }
+    if (!endpoint) {
+        throw new Error('Missing endpoint');
+    }
+    if (!queue) {
+        throw new Error('Missing queue');
+    }
 
-  const {zeitClient} = handler;
-  let metadata: nowMetadata = await zeitClient.getMetadata()
+    const {zeitClient} = handler;
+    let metadata: nowMetadata = await zeitClient.getMetadata();
 
-  const listener = {
-    endpoint,
-    queue
-  }
+    const listener = {
+        endpoint,
+        queue,
+    };
 
-  const instanceIndex = metadata.instances.findIndex((instance) => {
-    return instance.id === instanceId
-  })
-  metadata.instances[instanceIndex].listeners.push(listener)
+    const instanceIndex = metadata.instances.findIndex((instance) => {
+        return instance.id === instanceId;
+    });
+    metadata.instances[instanceIndex].listeners.push(listener);
 
-  await zeitClient.setMetadata(metadata)
-  return
+    await zeitClient.setMetadata(metadata);
+    return;
 }
 
-export async function deleteListener (
-  instanceId: string,
-  listenerIndex: string,
-  handler: HandlerOptions
+export async function deleteListener(
+    instanceId: string,
+    listenerIndex: string,
+    handler: HandlerOptions,
 ) {
-  const {zeitClient} = handler;
-  let metadata: nowMetadata = await zeitClient.getMetadata()
+    const {zeitClient} = handler;
+    let metadata: nowMetadata = await zeitClient.getMetadata();
 
-  const instanceIndex = metadata.instances.findIndex((instance) => {
-    return instance.id === instanceId
-  })
-  metadata.instances[instanceIndex].listeners.splice(parseInt(listenerIndex), 1)
+    const instanceIndex = metadata.instances.findIndex((instance) => {
+        return instance.id === instanceId;
+    });
+    metadata.instances[instanceIndex].listeners.splice(
+        parseInt(listenerIndex),
+        1,
+    );
 
     await zeitClient.setMetadata(metadata);
     return;

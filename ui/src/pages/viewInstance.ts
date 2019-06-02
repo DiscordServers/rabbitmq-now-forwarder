@@ -1,5 +1,5 @@
-import { htm, HandlerOptions } from '@zeit/integration-utils';
-import { getInstances, addListener, deleteListener } from '../utils/instances';
+import {htm, HandlerOptions} from '@zeit/integration-utils';
+import {getInstances, addListener, deleteListener} from '../utils/instances';
 
 let formStore = {
     listenerEndpoint: '',
@@ -42,29 +42,27 @@ export default async function viewInstance(handler: HandlerOptions) {
           }</B>
         </Notice>
       `;
-      }
+        }
     }
-   if (action.startsWith('delete-listener')) {
-    try {
-      await deleteListener(
-        instanceId,
-        action.split('-')[2],
-        handler
-      )
+    if (action.startsWith('delete-listener')) {
+        try {
+            await deleteListener(instanceId, action.split('-')[2], handler);
 
-      notice = htm`
+            notice = htm`
         <Notice type="success">
           Successfully removed listener
         </Notice>
-      `
-    } catch (error) {
-      notice = htm`
+      `;
+        } catch (error) {
+            notice = htm`
         <Notice type="error">
-          Failed removing the listener for the following reason: <B>${error.message}</B>
+          Failed removing the listener for the following reason: <B>${
+              error.message
+          }</B>
         </Notice>
-      `
+      `;
+        }
     }
-  }
 
     const instances = await getInstances(handler);
     const instance = instances.find((instance) => instance.id === instanceId);
@@ -92,7 +90,7 @@ export default async function viewInstance(handler: HandlerOptions) {
         <UL>
           <Box margin-bottom="50px">
             ${instance.listeners.map((listener, index) => {
-              return htm`
+                return htm`
                 <Box padding-bottom="4px" word-break="break-all" width="25rem" border-bottom="1px solid black">
                   <B>Webhook URL:</B> ${listener.endpoint}
                   <BR />
@@ -106,9 +104,13 @@ export default async function viewInstance(handler: HandlerOptions) {
         </UL>
         <H2>Add listener</H2>
         <Box>
-          <Input name="listenerEndpoint" placeholder="Listener Endpoint" value=${formStore.listenerEndpoint} />
+          <Input name="listenerEndpoint" placeholder="Listener Endpoint" value=${
+              formStore.listenerEndpoint
+          } />
           <BR />
-          <Input name="listenerQueue" placeholder="Listener Queue" value=${formStore.listenerQueue} />
+          <Input name="listenerQueue" placeholder="Listener Queue" value=${
+              formStore.listenerQueue
+          } />
           <BR />
           <BR />
           <Button action="submit-listener">Add Listener</Button>

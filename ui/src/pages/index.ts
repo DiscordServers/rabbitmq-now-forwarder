@@ -13,8 +13,13 @@ export default withUiHook(async (handler) => {
 
     if (['add-instance', 'submit-instance'].includes(action)) {
         return createPage(handler);
-    } if (action === 'submit-listener' || action.startsWith('view-instance') || action.startsWith('delete-listener')) {
-        return viewInstance(handler)
+    }
+    if (
+        action === 'submit-listener' ||
+        action.startsWith('view-instance') ||
+        action.startsWith('delete-listener')
+    ) {
+        return viewInstance(handler);
     }
 
     // Return main screen by default
