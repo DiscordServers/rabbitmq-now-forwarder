@@ -9,7 +9,8 @@
     "env": {
         "ZEIT_CLIENT_ID": "@ZEIT_CLIENT_ID",
         "ZEIT_CLIENT_SECRET": "@ZEIT_CLIENT_SECRET",
-        "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback"
+        "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback",
+        "ZEIT_HOOK_URL": "https://rabbitnowforwarder.tech/"
     },
     "routes": [
         {"src": "/getPublicKey/(.*)", "dest": "ui/src/api/getPublicKey.ts?configurationId=$1"},
