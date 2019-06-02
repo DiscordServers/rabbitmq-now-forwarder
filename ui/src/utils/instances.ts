@@ -1,6 +1,8 @@
-import {instanceOptions} from '../types/instance';
 import {HandlerOptions} from '@zeit/integration-utils';
+import {instanceOptions} from '../types/instance';
 import nowMetadata, {metadataInstance} from '../types/metadata';
+import {generateKeys} from './generateKeys';
+
 const uuid = require('uuid/v4');
 
 export async function addInstance(
@@ -28,15 +30,20 @@ export async function addInstance(
         password: instanceOptions.password,
     };
 
-    const optionsSecret = await zeitClient.ensureSecret(
-        `instance-${instanceId}.`,
+    const connectionSecret = await zeitClient.ensureSecret(
+        `instance-${instanceId}.connection`,
         JSON.stringify(instance),
+    );
+    const keysSecret = await zeitClient.ensureSecret(
+        `instance-${instanceId}.keys`,
+        JSON.stringify(await generateKeys()),
     );
 
     const metadataInstance: metadataInstance = {
         id: instanceId,
         name: instanceOptions.name,
-        connection_secret: optionsSecret,
+        connection_secret: connectionSecret,
+        keys_secret: keysSecret,
     };
 
     metadata.instances.push(metadataInstance);
