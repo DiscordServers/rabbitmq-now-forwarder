@@ -21,12 +21,21 @@ function startsWithAny(search, ...strings) {
 
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
-    const {action} = payload;
+    const {action, clientState} = payload;
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
     const publicKey = await getGeneratedKey(payload.configurationId);
     console.log(payload, metadata, publicKey);
+
+    if (!metadata.preferences) {
+        metadata.preferences = {
+            email_notifications: formStore.emailNotifications,
+        };
+        await zeitClient.setMetadata(metadata);
+    }
+
+    formStore.emailNotifications = metadata.preferences.email_notifications;
 
     switch (true) {
         case ['add-instance', 'submit-instance'].includes(action):
@@ -49,6 +58,17 @@ export default withUiHook(async (handler) => {
                 </Notice>`;
             }
 
+            break;
+        case action === 'update-preferences':
+            formStore.emailNotifications = clientState.emailNotifications;
+            metadata.preferences.email_notifications = clientState.emailNotifications;
+
+            await zeitClient.setMetadata(metadata);
+            notice = htm`
+                <Notice type="success">
+                    Successfully updated your preferences
+                </Notice>
+            `;
             break;
     }
 
@@ -91,12 +111,17 @@ export default withUiHook(async (handler) => {
                     <H1>Preferences</H1>
                     <Fieldset>
                         <FsContent>
-                            <Checkbox name="emailNotifications" label="Email Notifications" checked=${
-                                formStore.emailNotifications
-                            } />
+                            <Box>
+                                <Checkbox name="emailNotifications" label="Email Notifications" checked=${
+                                    formStore.emailNotifications
+                                } />
+                                <Box font-style="italic">
+                                    We will disable listeners that go over 20% in failure responses in a 30 minute period. To be notified when this happens, please check this box.
+                                </Box>
+                            </Box>
                         </FsContent>
                         <FsFooter>
-                            <Button action="update-preferences">Update</Button>
+                            <Button action="update-preferences" value=${formStore.emailNotifications}>Update</Button>
                         </FsFooter>
                     </Fieldset>
                 </Box>
