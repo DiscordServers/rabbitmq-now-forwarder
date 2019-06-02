@@ -161,26 +161,26 @@ export default async function viewInstance(handler: HandlerOptions) {
           <FsContent>
             <Box display="flex">
               <Box padding-right="10px">
-                <Input label="Instance name" name="instanceName" value=${formStore.instanceName} />
+                <Input label="Instance Name" name="instanceName" value=${formStore.instanceName} />
               </Box>
               <Box padding-right="10px">
-                <Input label="Instance host" name="instanceHost" value=${formStore.instanceHost} />
-              </Box>
-            </Box>
-            <Box display="flex">
-              <Box padding-right="10px">
-                <Input label="Instance port" name="instancePort" value=${formStore.instancePort} />
-              </Box>
-              <Box padding-right="10px">
-                <Input label="Instance vhost" name="instanceVhost" value=${formStore.instanceVhost} />
+                <Input label="Instance Host" name="instanceHost" value=${formStore.instanceHost} />
               </Box>
             </Box>
             <Box display="flex">
               <Box padding-right="10px">
-                <Input label="Instance username" name="instanceUsername" value=${formStore.instanceUsername} />
+                <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
               </Box>
               <Box padding-right="10px">
-                <Input type="password" label="Instance password" name="instancePassword" value=${
+                <Input label="Instance Virtual Host" name="instanceVhost" value=${formStore.instanceVhost} />
+              </Box>
+            </Box>
+            <Box display="flex">
+              <Box padding-right="10px">
+                <Input label="Instance Username" name="instanceUsername" value=${formStore.instanceUsername} />
+              </Box>
+              <Box padding-right="10px">
+                <Input type="password" label="Instance Password" name="instancePassword" value=${
                     formStore.instancePassword
                 }/>
               </Box>
