@@ -1,8 +1,18 @@
 import {htm, withUiHook} from '@zeit/integration-utils';
+import nowMetadata from '../types/metadata';
+import {deleteInstance, getGeneratedKey, getInstance, getInstances} from '../utils/instances';
 import createPage from './create';
 import viewInstance from './viewInstance';
-import nowMetadata from '../types/metadata';
-import {getInstances, deleteInstance, getInstance} from '../utils/instances';
+
+function startsWithAny(search, ...strings) {
+    for (const string of strings) {
+        if (search.startsWith(string)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
@@ -10,42 +20,31 @@ export default withUiHook(async (handler) => {
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
-    console.log(payload, metadata);
+    const publicKey = await getGeneratedKey(payload.configurationId);
+    console.log(payload, metadata, publicKey);
 
-    if (['add-instance', 'submit-instance'].includes(action)) {
-        return createPage(handler);
-    }
-    if (
-        action === 'submit-listener' ||
-        action.startsWith('view-instance') ||
-        action.startsWith('delete-listener')
-    ) {
-        return viewInstance(handler);
-    }
+    switch (true) {
+        case ['add-instance', 'submit-instance'].includes(action):
+            return createPage(handler);
+        case startsWithAny(action, 'submit-listener', 'view-instance-', 'delete-listener-'):
+            return viewInstance(handler);
+        case action.startsWith('delete-instance'):
+            const instanceId = action.substring('delete-instance-'.length);
+            const instance = await getInstance(instanceId, handler);
 
-    if (action.startsWith('delete-instance')) {
-        const instanceId = action.substring('delete-instance-'.length);
-        const instance = await getInstance(instanceId, handler);
+            try {
+                await deleteInstance(instanceId, handler);
 
-        try {
-            await deleteInstance(instanceId, handler);
+                notice = htm`<Notice type="success">
+                    Successfully deleted instance <B>${instance.name}</B> with ID <B>${instance.id}</B>
+                </Notice>`;
+            } catch (error) {
+                notice = htm`<Notice type="error">
+                    Failed deleting the instance for the following reason: <B>${error.message}</B>
+                </Notice>`;
+            }
 
-            notice = htm`
-                <Notice type="success">
-                    Successfully deleted instance <B>${
-                        instance.name
-                    }</B> with ID <B>${instance.id}</B>
-                </Notice>
-            `;
-        } catch (error) {
-            notice = htm`
-                <Notice type="error">
-                    Failed deleting the instance for the following reason: <B>${
-                        error.message
-                    }</B>
-                </Notice>
-            `;
-        }
+            break;
     }
 
     // Return main screen by default
@@ -60,29 +59,14 @@ export default withUiHook(async (handler) => {
             </Box>
 
             <Box>
-                ${
-                    notice
-                        ? htm`
-                    <Box padding="1rem">
-                        ${notice}
-                    </Box>
-                `
-                        : ''
-                }
-
+                ${notice ? htm`<Box padding="1rem">${notice}</Box>` : ''}
                 <UL>
-                    ${instances.map((instance) => {
-                        return htm`
-                            <LI>
-                                <Button small action=${`view-instance-${
-                                    instance.id
-                                }`}>${instance.name}</Button>
-                                <Button small themeColor="red" action=${`delete-instance-${
-                                    instance.id
-                                }`}>x</Button>
-                            </LI>
-                        `;
-                    })}
+                    ${instances.map(
+                        (instance) => htm`<LI>
+                                <Button small action=${`view-instance-${instance.id}`}>${instance.name}</Button>
+                                <Button small themeColor="red" action=${`delete-instance-${instance.id}`}>x</Button>
+                            </LI>`,
+                    )}
                 </UL>
             </Box>
         </Page>

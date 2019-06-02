@@ -11,6 +11,7 @@ MONGO_URL = "${var.mongo_url}"
 ZEIT_CLIENT_ID = "${var.zeit_client_id}"
 ZEIT_CLIENT_SECRET = "${var.zeit_client_secret}"
 ZEIT_CLIENT_REDIRECT_URI = "http://localhost:3000/callback"
+ZEIT_HOOK_URL = "http://localhost:3000"
 EOF
 }
 

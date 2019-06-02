@@ -1,4 +1,4 @@
-import {generateKeyPair, RSAKeyPairOptions} from 'crypto';
+import * as keypair from 'keypair';
 
 export interface Keys {
     publicKey: string;
@@ -6,23 +6,9 @@ export interface Keys {
 }
 
 export const generateKeys = async (): Promise<Keys> => {
-    return new Promise((resolve, reject) => {
-        generateKeyPair(
-            'rsa',
-            {
-                modulusLength: 4096,
-                publicKeyEncoding: {
-                    type: 'spki',
-                    format: 'pem',
-                },
-                privateKeyEncoding: {
-                    type: 'pkcs8',
-                    format: 'pem',
-                    cipher: 'aes-256-cbc',
-                },
-            } as RSAKeyPairOptions<'pem', 'pem'>,
-            (err, publicKey, privateKey) =>
-                err ? reject(err) : resolve({publicKey, privateKey}),
-        );
+    return new Promise((resolve) => {
+        const keys = keypair();
+
+        resolve({publicKey: keys.public, privateKey: keys.private});
     });
 };

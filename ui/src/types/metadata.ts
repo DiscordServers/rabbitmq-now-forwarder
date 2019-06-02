@@ -7,7 +7,7 @@ export interface metadataInstance {
     id: string;
     name: string;
     connection_secret: string;
-    keys_secret: string;
+    public_key: string;
     listeners: metadataListener[];
 }
 

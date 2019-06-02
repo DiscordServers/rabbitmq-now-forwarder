@@ -12,6 +12,7 @@
         "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback"
     },
     "routes": [
+        {"src": "/getPublicKey/(.*)", "dest": "ui/src/api/getPublicKey.ts?configurationId=$1"},
         {"src": "/callback", "dest": "ui/src/api/callback.ts"},
         {"src": "/", "dest": "ui/src/pages/index.ts"}
     ]

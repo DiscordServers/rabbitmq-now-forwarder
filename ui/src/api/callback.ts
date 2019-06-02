@@ -1,27 +1,15 @@
 import {IncomingMessage, ServerResponse} from 'http';
 import * as parseQuery from 'micro-query';
-import {Collection, Db, MongoClient} from 'mongodb';
 import fetch from 'node-fetch';
 import {stringify} from 'querystring';
-
-const client = new MongoClient(process.env.MONGO_URL);
-const dbName = process.env.NOW_REGION === 'dev1' ? 'dev' : 'production';
-
-let db: Db;
-let collection: Collection;
+import {generateKeys} from '../utils/generateKeys';
+import getCollection, {Configuration} from '../utils/getCollection';
 
 interface Query {
     teamId: string;
     configurationId: string;
     code: string;
     next: string;
-}
-
-interface Configuration {
-    userId: string;
-    teamId?: string;
-    configurationId: string;
-    installationId: string;
 }
 
 interface AccessTokenResponse {
@@ -33,12 +21,6 @@ interface AccessTokenResponse {
 }
 
 export default async function(req: IncomingMessage, res: ServerResponse) {
-    if (!client.isConnected()) {
-        await client.connect();
-        db = client.db(dbName);
-        collection = db.collection<Configuration>('configurations');
-    }
-
     const query: Query = parseQuery(req);
     const {code, next} = query;
     if (!code) {
@@ -62,14 +44,19 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
     });
     const json: AccessTokenResponse = await response.json();
 
+    const {publicKey, privateKey} = await generateKeys();
+
     const document: Configuration = {
         userId: json.user_id,
         teamId: json.team_id,
         configurationId: query.configurationId,
         installationId: json.installation_id,
+        accessToken: json.access_token,
+        publicKey,
+        privateKey,
     };
 
-    await collection.insertOne(document);
+    await (await getCollection()).insertOne(document);
 
     res.statusCode = 301;
     res.setHeader('Location', next);
