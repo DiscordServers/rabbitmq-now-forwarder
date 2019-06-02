@@ -5,6 +5,10 @@ import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 import createPage from './create';
 import viewInstance from './viewInstance';
 
+const formStore = {
+    emailNotifications: false,
+};
+
 function startsWithAny(search, ...strings) {
     for (const string of strings) {
         if (search.startsWith(string)) {
@@ -80,6 +84,32 @@ export default withUiHook(async (handler) => {
                         `;
                     })}
                 </${Table}>
+            </Box>
+
+            <Box display="flex" justify-content="space-between">
+                <Box width="48%">
+                    <H1>Preferences</H1>
+                    <Fieldset>
+                        <FsContent>
+                            <Checkbox name="emailNotifications" label="Email Notifications" checked=${
+                                formStore.emailNotifications
+                            } />
+                        </FsContent>
+                        <FsFooter>
+                            <Button action="update-preferences">Update</Button>
+                        </FsFooter>
+                    </Fieldset>
+                </Box>
+                <Box width="48%">
+                    <H1>Public Key</H1>
+                    <Fieldset>
+                        <FsContent>
+                            <Textarea width="100%" disabled>
+                                ${publicKey}
+                            </Textarea>
+                        </FsContent>
+                    </Fieldset>
+                </Box>
             </Box>
         </Page>
     `;
