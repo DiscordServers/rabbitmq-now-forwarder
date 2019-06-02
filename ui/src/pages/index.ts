@@ -26,7 +26,7 @@ export default withUiHook(async (handler) => {
     switch (true) {
         case ['add-instance', 'submit-instance'].includes(action):
             return createPage(handler);
-        case startsWithAny(action, 'submit-listener', 'view-instance-', 'delete-listener-'):
+        case startsWithAny(action, 'submit-listener', 'update-instance', 'view-instance-', 'delete-listener-'):
             return viewInstance(handler);
         case action.startsWith('delete-instance'):
             const instanceId = action.substring('delete-instance-'.length);
