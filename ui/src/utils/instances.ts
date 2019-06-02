@@ -5,11 +5,20 @@ import nowMetadata, {metadataInstance} from '../types/metadata';
 
 const uuid = require('uuid/v4');
 
-export async function addListener(instanceId: string, endpoint: string, queue: string, handler: HandlerOptions) {
-    if (!endpoint) {
+export async function addListener(
+    instanceId: string,
+    options: {
+        endpoint: string;
+        queue: string;
+        retry_on_failure: boolean;
+        expected_status_code?: number;
+    },
+    handler: HandlerOptions,
+) {
+    if (!options.endpoint) {
         throw new Error('Missing endpoint');
     }
-    if (!queue) {
+    if (!options.queue) {
         throw new Error('Missing queue');
     }
 
@@ -17,8 +26,10 @@ export async function addListener(instanceId: string, endpoint: string, queue: s
     let metadata: nowMetadata = await zeitClient.getMetadata();
 
     const listener = {
-        endpoint,
-        queue,
+        endpoint: options.endpoint,
+        queue: options.queue,
+        retry_on_failure: options.retry_on_failure,
+        expected_status_code: options.expected_status_code,
     };
 
     const instanceIndex = metadata.instances.findIndex((instance) => {

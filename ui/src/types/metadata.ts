@@ -1,6 +1,8 @@
 export interface metadataListener {
     queue: string;
     endpoint: string;
+    expected_status_code?: number;
+    retry_on_failure: boolean;
 }
 
 export interface metadataInstance {

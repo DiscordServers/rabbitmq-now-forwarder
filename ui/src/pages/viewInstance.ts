@@ -5,6 +5,8 @@ import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 let formStore = {
     listenerEndpoint: '',
     listenerQueue: '',
+    listenerRetryOnFailure: true,
+    listenerExpectedStatusCode: '',
     instanceName: '',
     instanceHost: '',
     instancePort: '',
@@ -57,14 +59,28 @@ export default async function viewInstance(handler: HandlerOptions) {
     if (action === 'submit-listener') {
         formStore.listenerEndpoint = clientState.listenerEndpoint;
         formStore.listenerQueue = clientState.listenerQueue;
+        formStore.listenerRetryOnFailure = clientState.listenerRetryOnFailure;
+        formStore.listenerExpectedStatusCode = clientState.listenerExpectedStatusCode;
 
         try {
-            await addListener(instanceId, formStore.listenerEndpoint, formStore.listenerQueue, handler);
+            await addListener(
+                instanceId,
+                {
+                    endpoint: formStore.listenerEndpoint,
+                    queue: formStore.listenerQueue,
+                    retry_on_failure: formStore.listenerRetryOnFailure === true,
+                    expected_status_code:
+                        formStore.listenerExpectedStatusCode !== ''
+                            ? parseInt(formStore.listenerExpectedStatusCode)
+                            : undefined,
+                },
+                handler,
+            );
 
             notice = htm`
         <Notice type="success">
           Successfully added the listener
-        </Notice>
+        </Notice> 
       `;
         } catch (error) {
             notice = htm`
@@ -127,13 +143,18 @@ export default async function viewInstance(handler: HandlerOptions) {
         <${Table} header=${htm`
           <${HeaderItem}>Endpoint</${HeaderItem}>
           <${HeaderItem}>Queue</${HeaderItem}>
+          <${HeaderItem}>Expected status code</${HeaderItem}>
+          <${HeaderItem}>Retry on failure?</${HeaderItem}>
           <${HeaderItem}>Delete Endpoint</${HeaderItem}>
         `}>
           ${instance.listeners.map((listener, index) => {
+              console.log(listener);
               return htm`
               <${TableRow}>
                 <${BodyItem}>${listener.endpoint}</${BodyItem}>
                 <${BodyItem}>${listener.queue}</${BodyItem}>
+                <${BodyItem}>${listener.expected_status_code || ''}</${BodyItem}>
+                <${BodyItem}>${listener.retry_on_failure ? 'yes' : 'no'}</${BodyItem}>
                 <${BodyItem}><Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button></${BodyItem}>
               </${TableRow}>
             `;
@@ -145,10 +166,23 @@ export default async function viewInstance(handler: HandlerOptions) {
           <FsContent>
             <Box display="flex">
               <Box padding-right="10px">
-                <Input name="listenerEndpoint" label="Listener Endpoint" value=${formStore.listenerEndpoint} />
+                <Input name="listenerEndpoint" label="Endpoint" value=${formStore.listenerEndpoint} />
               </Box>
-              <BR />
-              <Input name="listenerQueue" label="Listener Queue" value=${formStore.listenerQueue} />
+              <Box padding-right="10px">
+                <Input name="listenerQueue" label="Queue" value=${formStore.listenerQueue} />
+              </Box>
+            </Box>
+            <Box display="flex">
+              <Box padding-right="10px">
+                <Input name="listenerExpectedStatusCode" label="Expected status code" value=${
+                    formStore.listenerExpectedStatusCode
+                } />
+              </Box>
+            </Box>
+            <Box padding-top="10px">
+              <Checkbox name="listenerRetryOnFailure" label="Retry on failure" checked=${
+                  formStore.listenerRetryOnFailure
+              } />
             </Box>
           </FsContent>
           <FsFooter>

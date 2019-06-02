@@ -10,9 +10,9 @@ const getKey = () => {
 
 export default async function(req: IncomingMessage, res: ServerResponse) {
     const body: any = await json(req);
-    body.message    = body.message.toString('utf8');
-    const headers   = req.headers;
-    const verified  = getKey().verify(body.message, body.signature, 'utf8', 'base64');
+    body.message = body.message.toString('utf8');
+    const headers = req.headers;
+    const verified = getKey().verify(body.message, body.signature, 'utf8', 'base64');
 
     console.log({
         body,
