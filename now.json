@@ -1,7 +1,8 @@
 {
     "name": "rabbitmq-now-forwarder",
     "alias": ["rabbitnowforwarder.tech"],
-    "region": ["all"],
+    "scope": "discordservers",
+    "regions": ["all"],
     "version": 2,
     "builds": [
         {"src": "**/*.ts", "use": "@now/node"}
