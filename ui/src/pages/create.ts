@@ -1,5 +1,5 @@
 import {htm, HandlerOptions} from '@zeit/integration-utils';
-import { addInstance } from '../utils/instances';
+import {addInstance} from '../utils/instances';
 
 let formStore = {
     instanceName: '',
@@ -32,15 +32,19 @@ export default async function createPage(handler: HandlerOptions) {
 
             notice = htm`
                 <Notice type="success">
-                    Successfully added instance <B>${newInstance.name}</B> with ID <B>${newInstance.id}</B>
+                    Successfully added instance <B>${
+                        newInstance.name
+                    }</B> with ID <B>${newInstance.id}</B>
                 </Notice>
-            `
+            `;
         } catch (error) {
             notice = htm`
                 <Notice type="error">
-                    Failed adding the instance for the following reason: <B>${error.message}</B>
+                    Failed adding the instance for the following reason: <B>${
+                        error.message
+                    }</B>
                 </Notice>
-            `
+            `;
         }
     }
 
@@ -52,11 +56,15 @@ export default async function createPage(handler: HandlerOptions) {
             </Box>
 
             <Box>
-                ${notice ? htm`
+                ${
+                    notice
+                        ? htm`
                     <Box padding="1rem">
                         ${notice}
                     </Box>
-                `: ''}
+                `
+                        : ''
+                }
 
                 <Container>
                     <Input label="Instance name" name="instanceName" value=${

@@ -6,7 +6,7 @@ import {getInstances} from '../utils/instances';
 
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
-    const { action } = payload
+    const {action} = payload;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
     console.log(payload, metadata);
@@ -33,7 +33,9 @@ export default withUiHook(async (handler) => {
                     ${instances.map((instance) => {
                         return htm`
                             <LI>
-                                <Button small action=${`view-instance-${instance.id}`}>${instance.name}</Button>
+                                <Button small action=${`view-instance-${
+                                    instance.id
+                                }`}>${instance.name}</Button>
                             </LI>
                         `;
                     })}

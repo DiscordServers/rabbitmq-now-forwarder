@@ -2,46 +2,49 @@ import { htm, HandlerOptions } from '@zeit/integration-utils';
 import { getInstances, addListener, deleteListener } from '../utils/instances';
 
 let formStore = {
-  listenerEndpoint: '',
-  listenerQueue: ''
-}
+    listenerEndpoint: '',
+    listenerQueue: '',
+};
 
 export default async function viewInstance(handler: HandlerOptions) {
-  const {payload, zeitClient} = handler;
-  const {action, clientState} = payload
-  let instanceId: string;
-  let notice: string | undefined;
+    const {payload, zeitClient} = handler;
+    const {action, clientState} = payload;
+    let instanceId: string;
+    let notice: string | undefined;
 
-  if (action.startsWith('view-instance')) {
-    clientState.instanceId = action.substring('view-instance-'.length)
-  } 
-  
-  instanceId = clientState.instanceId
+    if (action.startsWith('view-instance')) {
+        clientState.instanceId = action.substring('view-instance-'.length);
+    }
 
-  if (action === 'submit-listener') {
-    formStore = clientState
+    instanceId = clientState.instanceId;
 
-    try {
-      await addListener(
-        instanceId,
-        formStore.listenerEndpoint,
-        formStore.listenerQueue,
-        handler
-      )
+    if (action === 'submit-listener') {
+        formStore = clientState;
 
-      notice = htm`
+        try {
+            await addListener(
+                instanceId,
+                formStore.listenerEndpoint,
+                formStore.listenerQueue,
+                handler,
+            );
+
+            notice = htm`
         <Notice type="success">
           Successfully added the listener
         </Notice>
-      `
-    } catch (error) {
-      notice = htm`
+      `;
+        } catch (error) {
+            notice = htm`
         <Notice type="error">
-          Failed adding the listener for the following reason: <B>${error.message}</B>
+          Failed adding the listener for the following reason: <B>${
+              error.message
+          }</B>
         </Notice>
-      `
+      `;
+      }
     }
-  } if (action.startsWith('delete-listener')) {
+   if (action.startsWith('delete-listener')) {
     try {
       await deleteListener(
         instanceId,
@@ -63,11 +66,11 @@ export default async function viewInstance(handler: HandlerOptions) {
     }
   }
 
-  const instances = await getInstances(handler)
-  const instance  = instances.find((instance) => instance.id === instanceId)
-  console.log(instanceId)
+    const instances = await getInstances(handler);
+    const instance = instances.find((instance) => instance.id === instanceId);
+    console.log(instanceId);
 
-  return htm`
+    return htm`
     <Page>
       <Box display="flex" justifyContent="space-between">
         <H1>${instance.name} - ${instance.id}</H1>
@@ -75,11 +78,15 @@ export default async function viewInstance(handler: HandlerOptions) {
       </Box>
 
       <Box>
-        ${notice ? htm`
+        ${
+            notice
+                ? htm`
           <Box padding="1rem">
             ${notice}
           </Box>
-        `: ''}
+        `
+                : ''
+        }
 
         <H2>Listeners</H2>
         <UL>
@@ -93,7 +100,7 @@ export default async function viewInstance(handler: HandlerOptions) {
                   <BR />
                   <Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button>
                 </Box>
-              `
+              `;
             })}
           </Box>
         </UL>
@@ -111,5 +118,5 @@ export default async function viewInstance(handler: HandlerOptions) {
         </Box>
       </Box>
     </Page>
-  `
+  `;
 }

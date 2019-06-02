@@ -1,13 +1,15 @@
-import {instanceOptions} from '../types/instance';
 import {HandlerOptions} from '@zeit/integration-utils';
+import {instanceOptions} from '../types/instance';
 import nowMetadata, {metadataInstance} from '../types/metadata';
+import {generateKeys} from './generateKeys';
+
 const uuid = require('uuid/v4');
 
-export async function addListener (
-  instanceId: string,
-  endpoint: string,
-  queue: string,
-  handler: HandlerOptions
+export async function addListener(
+    instanceId: string,
+    endpoint: string,
+    queue: string,
+    handler: HandlerOptions,
 ) {
   if (!endpoint) {
     throw new Error('Missing endpoint')
@@ -45,8 +47,8 @@ export async function deleteListener (
   })
   metadata.instances[instanceIndex].listeners.splice(parseInt(listenerIndex), 1)
 
-  await zeitClient.setMetadata(metadata)
-  return
+    await zeitClient.setMetadata(metadata);
+    return;
 }
 
 export async function addInstance(
@@ -74,16 +76,21 @@ export async function addInstance(
         password: instanceOptions.password,
     };
 
-    const optionsSecret = await zeitClient.ensureSecret(
-        `instance-${instanceId}.`,
+    const connectionSecret = await zeitClient.ensureSecret(
+        `instance-${instanceId}.connection`,
         JSON.stringify(instance),
+    );
+    const keysSecret = await zeitClient.ensureSecret(
+        `instance-${instanceId}.keys`,
+        JSON.stringify(await generateKeys()),
     );
 
     const metadataInstance: metadataInstance = {
         id: instanceId,
         name: instanceOptions.name,
-        connection_secret: optionsSecret,
-        listeners: []
+        connection_secret: connectionSecret,
+        keys_secret: keysSecret,
+        listeners: [],
     };
 
     metadata.instances.push(metadataInstance);
