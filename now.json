@@ -5,11 +5,11 @@
     "regions": ["all"],
     "version": 2,
     "builds": [
-        {"src": "**/*.ts", "use": "@now/node"}
+        {"src": "ui/src/{pages,api}/**/*.ts", "use": "@now/node"}
     ],
     "env": {
-        "ZEIT_CLIENT_ID": "@ZEIT_CLIENT_ID",
-        "ZEIT_CLIENT_SECRET": "@ZEIT_CLIENT_SECRET",
+        "ZEIT_CLIENT_ID": "@zeit_client_id",
+        "ZEIT_CLIENT_SECRET": "@zeit_client_secret",
         "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback",
         "ZEIT_HOOK_URL": "https://rabbitnowforwarder.tech/"
     },
