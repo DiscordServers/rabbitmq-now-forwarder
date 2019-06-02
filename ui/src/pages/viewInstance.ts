@@ -154,7 +154,7 @@ export default async function viewInstance(handler: HandlerOptions) {
                 <${BodyItem}>${listener.endpoint}</${BodyItem}>
                 <${BodyItem}>${listener.queue}</${BodyItem}>
                 <${BodyItem}>${listener.expected_status_code || ''}</${BodyItem}>
-                <${BodyItem}>${listener.retry_on_failure ? 'yes' : 'no'}</${BodyItem}>
+                <${BodyItem}>${listener.expected_status_code ? (listener.retry_on_failure ? 'yes' : 'no') : ''}</${BodyItem}>
                 <${BodyItem}><Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button></${BodyItem}>
               </${TableRow}>
             `;
