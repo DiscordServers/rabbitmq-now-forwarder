@@ -80,6 +80,10 @@ export async function addInstance(
         password: instanceOptions.password,
     };
 
+    if (instanceOptions.vhost !== '') {
+        instance.vhost = instanceOptions.vhost;
+    }
+
     const connectionSecret = await zeitClient.ensureSecret(
         `instance-${instanceId}.connection`,
         JSON.stringify(instance),
