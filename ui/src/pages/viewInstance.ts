@@ -1,5 +1,5 @@
 import {htm, HandlerOptions} from '@zeit/integration-utils';
-import {getInstances, addListener, deleteListener, updateInstance} from '../utils/instances';
+import {getInstances, addListener, deleteListener, updateInstance, toggleListener} from '../utils/instances';
 import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 
 let formStore = {
@@ -25,6 +25,18 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
     }
 
     instanceId = manualInstanceId || clientState.instanceId;
+
+    if (action.startsWith('toggle-listener')) {
+        const listenerId = action.split('|')[1];
+
+        await toggleListener(instanceId, listenerId, handler);
+
+        notice = htm`
+        <Notice type="success">
+          Successfully toggled the listener
+        </Notice>
+      `;
+    }
 
     if (action === 'update-instance') {
         try {
@@ -141,7 +153,8 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
           <${HeaderItem}>Endpoint</${HeaderItem}>
           <${HeaderItem}>Queue</${HeaderItem}>
           <${HeaderItem}>Expected status code</${HeaderItem}>
-          <${HeaderItem}>Retry on failure?</${HeaderItem}>
+          <${HeaderItem}>Retry on failure</${HeaderItem}>
+          <${HeaderItem}>Enable/Disable</${HeaderItem}>
           <${HeaderItem}>Delete Endpoint</${HeaderItem}>
         `}>
           ${instance.listeners.map((listener, index) => {
@@ -153,6 +166,11 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
                 <${BodyItem}>${
                   listener.expected_status_code ? (listener.retry_on_failure ? 'yes' : 'no') : ''
               }</${BodyItem}>
+                <${BodyItem}><Button small themeColor="${
+                  listener.enabled ? 'red' : 'green'
+              }" action=${`toggle-listener|${listener.id}`}>${
+                  listener.enabled ? 'Disable' : 'Enable'
+              }</Button></${BodyItem}>
                 <${BodyItem}><Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button></${BodyItem}>
               </${TableRow}>
             `;
@@ -204,7 +222,9 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
                 <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
               </Box>
               <Box padding-right="10px">
-                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${formStore.instanceVhost} />
+                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${
+                    formStore.instanceVhost
+                } />
               </Box>
             </Box>
             <Box display="flex">

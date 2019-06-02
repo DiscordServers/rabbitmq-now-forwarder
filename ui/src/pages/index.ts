@@ -42,6 +42,7 @@ export default withUiHook(async (handler) => {
             return createPage(handler);
         case startsWithAny(
             action,
+            'toggle-listener',
             'submit-listener',
             'submit-instance',
             'update-instance',

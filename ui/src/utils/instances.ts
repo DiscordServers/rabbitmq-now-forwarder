@@ -5,6 +5,19 @@ import nowMetadata, {metadataInstance} from '../types/metadata';
 
 const uuid = require('uuid/v4');
 
+export async function toggleListener(instanceId: string, listenerId: string, handler: HandlerOptions) {
+    const {zeitClient} = handler;
+    const metadata: nowMetadata = await zeitClient.getMetadata();
+
+    const instance = metadata.instances
+        .find((instance) => instance.id === instanceId)
+        .listeners.find((listener) => listener.id === listenerId);
+
+    instance.enabled = !instance.enabled;
+
+    await zeitClient.setMetadata(metadata);
+}
+
 export async function addListener(
     instanceId: string,
     options: {
@@ -27,6 +40,7 @@ export async function addListener(
 
     const listener = {
         id: uuid(),
+        enabled: true,
         endpoint: options.endpoint,
         queue: options.queue,
         retry_on_failure: options.retry_on_failure,

@@ -1,5 +1,6 @@
 export interface metadataListener {
     id: string;
+    enabled: boolean;
     queue: string;
     endpoint: string;
     expected_status_code?: number;
