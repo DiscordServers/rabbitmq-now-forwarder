@@ -5,6 +5,6 @@
         {"src": "**/*.ts", "use": "@now/node"}
     ],
     "routes": [
-        {"src": "/", "dest": "ui/src/index.ts"}
+        {"src": "/", "dest": "ui/src/pages/index.ts"}
     ]
 }

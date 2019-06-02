@@ -8,7 +8,7 @@ export interface metadataInstance {
     name: string;
     connection_secret: string;
     keys_secret: string;
-    // listeners: metadataListener[];
+    listeners: metadataListener[];
 }
 
 export default interface nowMetadata {

@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
     "scripts": {
-        "dev": "now dev",
+        "dev": "now dev -p 3000",
         "prettier": "prettier --write --single-quote './src/**/*.ts'"
     },
     "publishConfig": {
