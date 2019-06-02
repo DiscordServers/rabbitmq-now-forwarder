@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import {HandlerOptions} from '@zeit/integration-utils';
 import {instanceOptions} from '../types/instance';
 import nowMetadata, {metadataInstance} from '../types/metadata';
@@ -27,14 +26,30 @@ export async function addListener(
         queue,
     };
 
-    for (let i = 0; i < metadata.instances.length; i++) {
-        const instance = metadata.instances[i];
+    const instanceIndex = metadata.instances.findIndex((instance) => {
+        return instance.id === instanceId;
+    });
+    metadata.instances[instanceIndex].listeners.push(listener);
 
-        if (instance.id === instanceId) {
-            metadata.instances[i].listeners.push(listener);
-            break;
-        }
-    }
+    await zeitClient.setMetadata(metadata);
+    return;
+}
+
+export async function deleteListener(
+    instanceId: string,
+    listenerIndex: string,
+    handler: HandlerOptions,
+) {
+    const {zeitClient} = handler;
+    let metadata: nowMetadata = await zeitClient.getMetadata();
+
+    const instanceIndex = metadata.instances.findIndex((instance) => {
+        return instance.id === instanceId;
+    });
+    metadata.instances[instanceIndex].listeners.splice(
+        parseInt(listenerIndex),
+        1,
+    );
 
     await zeitClient.setMetadata(metadata);
     return;
@@ -65,6 +80,10 @@ export async function addInstance(
         password: instanceOptions.password,
     };
 
+    if (instanceOptions.vhost !== '') {
+        instance.vhost = instanceOptions.vhost;
+    }
+
     const connectionSecret = await zeitClient.ensureSecret(
         `instance-${instanceId}.connection`,
         JSON.stringify(instance),
@@ -88,6 +107,22 @@ export async function addInstance(
     return metadataInstance;
 }
 
+export async function deleteInstance(
+    instanceId: string,
+    handler: HandlerOptions,
+) {
+    const {zeitClient} = handler;
+    const metadata: nowMetadata = await zeitClient.getMetadata();
+
+    const instanceIndex = metadata.instances.findIndex(
+        (instance) => instance.id === instanceId,
+    );
+
+    metadata.instances.splice(instanceIndex, 1);
+    await zeitClient.setMetadata(metadata);
+    return;
+}
+
 export async function getInstances(handler: HandlerOptions) {
     const {zeitClient} = handler;
     const metadata: nowMetadata = await zeitClient.getMetadata();
@@ -97,4 +132,11 @@ export async function getInstances(handler: HandlerOptions) {
     }
 
     return metadata.instances;
+}
+
+export async function getInstance(instanceId: string, handler: HandlerOptions) {
+    const {zeitClient} = handler;
+    const metadata: nowMetadata = await zeitClient.getMetadata();
+
+    return metadata.instances.find((instance) => instance.id === instanceId);
 }

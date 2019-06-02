@@ -2,11 +2,12 @@ import {htm, withUiHook} from '@zeit/integration-utils';
 import createPage from './create';
 import viewInstance from './viewInstance';
 import nowMetadata from '../types/metadata';
-import {getInstances} from '../utils/instances';
+import {getInstances, deleteInstance, getInstance} from '../utils/instances';
 
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
     const {action} = payload;
+    let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
     console.log(payload, metadata);
@@ -14,8 +15,37 @@ export default withUiHook(async (handler) => {
     if (['add-instance', 'submit-instance'].includes(action)) {
         return createPage(handler);
     }
-    if (action === 'submit-listener' || action.startsWith('view-instance')) {
+    if (
+        action === 'submit-listener' ||
+        action.startsWith('view-instance') ||
+        action.startsWith('delete-listener')
+    ) {
         return viewInstance(handler);
+    }
+
+    if (action.startsWith('delete-instance')) {
+        const instanceId = action.substring('delete-instance-'.length);
+        const instance = await getInstance(instanceId, handler);
+
+        try {
+            await deleteInstance(instanceId, handler);
+
+            notice = htm`
+                <Notice type="success">
+                    Successfully deleted instance <B>${
+                        instance.name
+                    }</B> with ID <B>${instance.id}</B>
+                </Notice>
+            `;
+        } catch (error) {
+            notice = htm`
+                <Notice type="error">
+                    Failed deleting the instance for the following reason: <B>${
+                        error.message
+                    }</B>
+                </Notice>
+            `;
+        }
     }
 
     // Return main screen by default
@@ -30,6 +60,16 @@ export default withUiHook(async (handler) => {
             </Box>
 
             <Box>
+                ${
+                    notice
+                        ? htm`
+                    <Box padding="1rem">
+                        ${notice}
+                    </Box>
+                `
+                        : ''
+                }
+
                 <UL>
                     ${instances.map((instance) => {
                         return htm`
@@ -37,6 +77,9 @@ export default withUiHook(async (handler) => {
                                 <Button small action=${`view-instance-${
                                     instance.id
                                 }`}>${instance.name}</Button>
+                                <Button small themeColor="red" action=${`delete-instance-${
+                                    instance.id
+                                }`}>x</Button>
                             </LI>
                         `;
                     })}
