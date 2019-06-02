@@ -37,6 +37,7 @@
         "mongodb": "^3.2.6",
         "node-fetch": "^2.6.0",
         "node-os-utils": "^1.0.7",
+        "node-rsa": "^1.0.5",
         "ts-node-dev": "^1.0.0-pre.39"
     },
     "devDependencies": {
@@ -46,6 +47,7 @@
         "@types/mongodb": "^3.1.28",
         "@types/node": "^12.0.4",
         "@types/node-fetch": "^2.3.4",
+        "@types/node-rsa": "^1.0.0",
         "@types/prettier": "^1.16.4",
         "dotenv": "^8.0.0",
         "prettier": "^1.17.1",

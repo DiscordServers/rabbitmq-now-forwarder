@@ -1,22 +1,18 @@
 import {IncomingMessage, ServerResponse} from 'http';
 import {json, send} from 'micro';
-import * as crypto from 'crypto';
+import * as NodeRSA from 'node-rsa';
 
 const getKey = () => {
     let buff = new Buffer(process.env.TEST_PUBLIC_KEY, 'base64');
 
-    return buff.toString('ascii');
+    return new NodeRSA(buff.toString('utf8'));
 };
 
 export default async function(req: IncomingMessage, res: ServerResponse) {
     const body: any = await json(req);
-    body.message = body.message.toString('utf8');
-
-    const headers = req.headers;
-
-    const verifierObject = crypto.createVerify('RSA-SHA512');
-    verifierObject.update(body.message);
-    const verified = verifierObject.verify(getKey(), body.signature, 'base64');
+    body.message    = body.message.toString('utf8');
+    const headers   = req.headers;
+    const verified  = getKey().verify(body.message, body.signature, 'utf8', 'base64');
 
     console.log({
         body,
@@ -24,5 +20,5 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         verified,
     });
 
-    return send(res, 204);
+    return send(res, verified ? 204 : 403);
 }
