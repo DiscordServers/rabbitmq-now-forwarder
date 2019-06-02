@@ -1,6 +1,7 @@
 import {htm, withUiHook} from '@zeit/integration-utils';
 import nowMetadata from '../types/metadata';
 import {deleteInstance, getGeneratedKey, getInstance, getInstances} from '../utils/instances';
+import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 import createPage from './create';
 import viewInstance from './viewInstance';
 
@@ -54,20 +55,31 @@ export default withUiHook(async (handler) => {
     return htm`
         <Page>
             <Box display="flex" justifyContent="space-between">
-                <H1>Your Instances</H1>
+                <H1>Your RabbitMQ Instances</H1>
                 <Button action="add-instance">Add Instance</Button>
             </Box>
 
             <Box>
                 ${notice ? htm`<Box padding="1rem">${notice}</Box>` : ''}
-                <UL>
-                    ${instances.map(
-                        (instance) => htm`<LI>
-                                <Button small action=${`view-instance-${instance.id}`}>${instance.name}</Button>
-                                <Button small themeColor="red" action=${`delete-instance-${instance.id}`}>x</Button>
-                            </LI>`,
-                    )}
-                </UL>
+                <${Table} header=${htm`
+                    <${HeaderItem}>Instance</${HeaderItem}>
+                    <${HeaderItem}>Amount listeners</${HeaderItem}>
+                    <${HeaderItem}>Delete Instance</${HeaderItem}>
+                `}>
+                    ${instances.map((instance) => {
+                        return htm`
+                        <${TableRow}>
+                            <${BodyItem}><Button small action=${`view-instance-${instance.id}`}>${
+                            instance.name
+                        }</Button></${BodyItem}>
+                            <${BodyItem}>${instance.listeners.length}</${BodyItem}>
+                            <${BodyItem}><Button small themeColor="red" action=${`delete-instance-${
+                            instance.id
+                        }`}>Delete</Button></${BodyItem}>
+                        </${TableRow}>
+                        `;
+                    })}
+                </${Table}>
             </Box>
         </Page>
     `;
