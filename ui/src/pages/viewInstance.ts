@@ -119,8 +119,6 @@ export default async function viewInstance(handler: HandlerOptions) {
     formStore.instanceUsername = connection.username;
     formStore.instancePassword = connection.password;
 
-    console.log(instanceId);
-
     return htm`
     <Page>
       <Box display="flex" justifyContent="space-between">
@@ -148,7 +146,6 @@ export default async function viewInstance(handler: HandlerOptions) {
           <${HeaderItem}>Delete Endpoint</${HeaderItem}>
         `}>
           ${instance.listeners.map((listener, index) => {
-              console.log(listener);
               return htm`
               <${TableRow}>
                 <${BodyItem}>${listener.endpoint}</${BodyItem}>

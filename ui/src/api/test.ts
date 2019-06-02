@@ -14,11 +14,5 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
     const headers = req.headers;
     const verified = getKey().verify(body.message, body.signature, 'utf8', 'base64');
 
-    console.log({
-        body,
-        headers,
-        verified,
-    });
-
     return send(res, verified ? 204 : 403);
 }
