@@ -41,6 +41,12 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
 
     const query: Query = parseQuery(req);
     const {code, next} = query;
+    if (!code) {
+        res.statusCode = 204;
+        res.end();
+
+        return;
+    }
 
     const response = await fetch('https://api.zeit.co/v2/oauth/access_token', {
         method: 'POST',
@@ -62,6 +68,8 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         configurationId: query.configurationId,
         installationId: json.installation_id,
     };
+
+    console.log({document, query});
 
     await collection.insertOne(document);
 
