@@ -19,6 +19,11 @@ export interface metadataInstance {
     listeners: metadataListener[];
 }
 
+export interface metadataPreferences {
+    email_notifications: boolean;
+}
+
 export default interface nowMetadata {
     instances: metadataInstance[];
+    preferences: metadataPreferences;
 }
