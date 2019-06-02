@@ -25,18 +25,18 @@ const getInstance = async () => {
         for (const instance of metadata.instances) {
             const dbInstance = await instancesCollection.findOne({instanceId: instance.id});
             if (!dbInstance) {
-                return instance;
+                return {instance, configuration};
             }
 
-            if (dbInstance.lastHeartbeat < Date.now() - 1000 * 60) {
-                return instance;
+            if (dbInstance.lastHeartbeat < Date.now() - 1000 * 1) {
+                return {instance, configuration};
             }
         }
     }
 
     console.log('No available instances');
 
-    return null;
+    return {};
 };
 
 export default getInstance;
