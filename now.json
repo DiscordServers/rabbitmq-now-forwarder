@@ -11,7 +11,8 @@
         "ZEIT_CLIENT_ID": "@zeit_client_id",
         "ZEIT_CLIENT_SECRET": "@zeit_client_secret",
         "ZEIT_CLIENT_REDIRECT_URI": "https://rabbitnowforwarder.tech/callback",
-        "ZEIT_HOOK_URL": "https://rabbitnowforwarder.tech/"
+        "ZEIT_HOOK_URL": "https://rabbitnowforwarder.tech/",
+        "TEST_PUBLIC_KEY": "@test_public_key"
     },
     "routes": [
         {"src": "/test", "dest": "ui/src/api/test.ts"},

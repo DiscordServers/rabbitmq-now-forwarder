@@ -8,9 +8,6 @@ const spawnListener = async (configuration: Configuration, instance: Instance) =
     console.log('Spawning listener for: ' + instance.id);
     setInterval(() => heartbeat(configuration, instance), 5000);
 
-    // Debugger
-    // instance.listeners = [{queue: 'test', endpoint: 'https://google.com'}];
-
     const channel = await getRabbitChannel(instance);
     for (const listener of instance.listeners) {
         channel.consume(listener.queue, processMessage(configuration, instance, channel, listener));
