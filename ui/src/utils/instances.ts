@@ -43,6 +43,24 @@ export async function deleteListener(instanceId: string, listenerIndex: string, 
     return;
 }
 
+export async function updateInstance(instanceId: string, instanceOptions: instanceOptions, handler: HandlerOptions) {
+    const {zeitClient} = handler;
+
+    const metadata: nowMetadata = await zeitClient.getMetadata();
+    const instance = metadata.instances.find((instance) => instance.id === instanceId);
+    const {connection} = instance;
+
+    instance.name = instanceOptions.name;
+    connection.host = instanceOptions.host;
+    connection.port = instanceOptions.port;
+    connection.vhost = instanceOptions.vhost;
+    connection.username = instanceOptions.username;
+    connection.password = instanceOptions.password;
+
+    await zeitClient.setMetadata(metadata);
+    return;
+}
+
 export async function addInstance(instanceOptions: instanceOptions, handler: HandlerOptions) {
     ['name', 'host', 'port', 'username', 'password'].forEach((key) => {
         if (!instanceOptions[key]) {
