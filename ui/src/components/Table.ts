@@ -44,10 +44,10 @@ export const HeaderItem = ({children}: {children: any}) => html`
         borderStyle="solid"
         borderWidth="0px"
         borderBottomWidth="1px"
-        ><p><b>${children}</b></p></Box
+        ><P><B>${children}</B></P></Box
     >
 `;
 
 export const BodyItem = ({children}: {children: any}) => html`
-    <Box display="table-cell" padding="10px"><p>${children}</p></Box>
+    <Box display="table-cell" padding="10px"><P>${children}</P></Box>
 `;

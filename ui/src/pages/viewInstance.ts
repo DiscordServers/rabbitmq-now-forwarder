@@ -23,12 +23,7 @@ export default async function viewInstance(handler: HandlerOptions) {
         formStore = clientState;
 
         try {
-            await addListener(
-                instanceId,
-                formStore.listenerEndpoint,
-                formStore.listenerQueue,
-                handler,
-            );
+            await addListener(instanceId, formStore.listenerEndpoint, formStore.listenerQueue, handler);
 
             notice = htm`
         <Notice type="success">
@@ -38,9 +33,7 @@ export default async function viewInstance(handler: HandlerOptions) {
         } catch (error) {
             notice = htm`
         <Notice type="error">
-          Failed adding the listener for the following reason: <B>${
-              error.message
-          }</B>
+          Failed adding the listener for the following reason: <B>${error.message}</B>
         </Notice>
       `;
         }
@@ -57,9 +50,7 @@ export default async function viewInstance(handler: HandlerOptions) {
         } catch (error) {
             notice = htm`
         <Notice type="error">
-          Failed removing the listener for the following reason: <B>${
-              error.message
-          }</B>
+          Failed removing the listener for the following reason: <B>${error.message}</B>
         </Notice>
       `;
         }
@@ -109,14 +100,10 @@ export default async function viewInstance(handler: HandlerOptions) {
             <FsContent>
               <Box display="flex">
                 <Box padding-right="10px">
-                  <Input name="listenerEndpoint" label="Listener Endpoint" value=${
-                      formStore.listenerEndpoint
-                  } />
+                  <Input name="listenerEndpoint" label="Listener Endpoint" value=${formStore.listenerEndpoint} />
                 </Box>
                 <BR />
-                <Input name="listenerQueue" label="Listener Queue" value=${
-                    formStore.listenerQueue
-                } />
+                <Input name="listenerQueue" label="Listener Queue" value=${formStore.listenerQueue} />
               </Box>
             </FsContent>
             <FsFooter>

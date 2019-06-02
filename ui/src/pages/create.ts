@@ -32,17 +32,13 @@ export default async function createPage(handler: HandlerOptions) {
 
             notice = htm`
                 <Notice type="success">
-                    Successfully added instance <B>${
-                        newInstance.name
-                    }</B> with ID <B>${newInstance.id}</B>
+                    Successfully added instance <B>${newInstance.name}</B> with ID <B>${newInstance.id}</B>
                 </Notice>
             `;
         } catch (error) {
             notice = htm`
                 <Notice type="error">
-                    Failed adding the instance for the following reason: <B>${
-                        error.message
-                    }</B>
+                    Failed adding the instance for the following reason: <B>${error.message}</B>
                 </Notice>
             `;
         }
@@ -67,24 +63,12 @@ export default async function createPage(handler: HandlerOptions) {
                 }
 
                 <Container>
-                    <Input label="Instance name" name="instanceName" value=${
-                        formStore.instanceName
-                    } />
-                    <Input label="Instance host" name="instanceHost" value=${
-                        formStore.instanceHost
-                    } />
-                    <Input label="Instance port" name="instancePort" value=${
-                        formStore.instancePort
-                    } />
-                    <Input label="Instance vhost" name="instanceVhost" value=${
-                        formStore.instanceVhost
-                    } />
-                    <Input label="Instance username" name="instanceUsername" value=${
-                        formStore.instanceUsername
-                    } />
-                    <Input label="Instance password" name="instancePassword" value=${
-                        formStore.instancePassword
-                    }/>
+                    <Input label="Instance name" name="instanceName" value=${formStore.instanceName} />
+                    <Input label="Instance host" name="instanceHost" value=${formStore.instanceHost} />
+                    <Input label="Instance port" name="instancePort" value=${formStore.instancePort} />
+                    <Input label="Instance vhost" name="instanceVhost" value=${formStore.instanceVhost} />
+                    <Input label="Instance username" name="instanceUsername" value=${formStore.instanceUsername} />
+                    <Input label="Instance password" name="instancePassword" value=${formStore.instancePassword}/>
 
                     <Button action="submit-instance">Submit</Button>
                 </Container>
