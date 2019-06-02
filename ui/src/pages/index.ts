@@ -63,7 +63,7 @@ export default withUiHook(async (handler) => {
                 ${notice ? htm`<Box padding="1rem">${notice}</Box>` : ''}
                 <${Table} header=${htm`
                     <${HeaderItem}>Instance</${HeaderItem}>
-                    <${HeaderItem}>Amount listeners</${HeaderItem}>
+                    <${HeaderItem}>Listener Amount</${HeaderItem}>
                     <${HeaderItem}>Delete Instance</${HeaderItem}>
                 `}>
                     ${instances.map((instance) => {

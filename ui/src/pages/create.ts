@@ -4,7 +4,7 @@ import {addInstance} from '../utils/instances';
 let formStore = {
     instanceName: '',
     instanceHost: '',
-    instancePort: '',
+    instancePort: '5672',
     instanceVhost: '',
     instanceUsername: '',
     instancePassword: '',
@@ -51,7 +51,7 @@ export default async function createPage(handler: HandlerOptions) {
                 <Button action="view">Go back</Button>
             </Box>
 
-            <Box>
+            <Box margin-top="15px">
                 ${
                     notice
                         ? htm`
@@ -62,16 +62,43 @@ export default async function createPage(handler: HandlerOptions) {
                         : ''
                 }
 
-                <Container>
-                    <Input label="Instance name" name="instanceName" value=${formStore.instanceName} />
-                    <Input label="Instance host" name="instanceHost" value=${formStore.instanceHost} />
-                    <Input label="Instance port" name="instancePort" value=${formStore.instancePort} />
-                    <Input label="Instance vhost" name="instanceVhost" value=${formStore.instanceVhost} />
-                    <Input label="Instance username" name="instanceUsername" value=${formStore.instanceUsername} />
-                    <Input label="Instance password" name="instancePassword" value=${formStore.instancePassword}/>
-
-                    <Button action="submit-instance">Submit</Button>
-                </Container>
+                <Fieldset>
+                    <FsContent>
+                        <Box display="flex">
+                            <Box padding-right="10px">
+                                <Input label="Instance Name" name="instanceName" value=${formStore.instanceName} />
+                            </Box>
+                            <Box padding-right="10px">
+                                <Input label="Instance Host" name="instanceHost" value=${formStore.instanceHost} />
+                            </Box>
+                        </Box>
+                        <Box display="flex">
+                            <Box padding-right="10px">
+                                <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
+                            </Box>
+                            <Box padding-right="10px">
+                                <Input label="Instance Virtual Host" name="instanceVhost" value=${
+                                    formStore.instanceVhost
+                                } />
+                            </Box>
+                        </Box>
+                        <Box display="flex">
+                            <Box padding-right="10px">
+                                <Input label="Instance Username" name="instanceUsername" value=${
+                                    formStore.instanceUsername
+                                } />
+                            </Box>
+                            <Box padding-right="10px">
+                                <Input type="password" label="Instance Password" name="instancePassword" value=${
+                                    formStore.instancePassword
+                                }/>
+                            </Box>
+                        </Box>
+                    </FsContent>
+                    <FsFooter>
+                        <Button action="submit-instance">Submit</Button>
+                    </FsFooter>
+                </Fieldset>
             </Box>
         </Page>
     `;
