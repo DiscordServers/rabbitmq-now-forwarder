@@ -2,11 +2,7 @@ import {IncomingMessage, ServerResponse} from 'http';
 import {json, send} from 'micro';
 import * as NodeRSA from 'node-rsa';
 
-const getKey = () => {
-    let buff = new Buffer(process.env.TEST_PUBLIC_KEY, 'base64');
-
-    return new NodeRSA(buff.toString('utf8'));
-};
+const getKey = () => new NodeRSA(process.env.RABBIT_FORWARDER_PUBLIC_KEY);
 
 export default async function(req: IncomingMessage, res: ServerResponse) {
     const body: any = await json(req);

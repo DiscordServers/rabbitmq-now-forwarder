@@ -25,6 +25,7 @@ export interface metadataPreferences {
 }
 
 export default interface nowMetadata {
+    linked?: {[projectId: string]: boolean}
     public_key: string;
     instances: metadataInstance[];
     preferences: metadataPreferences;
