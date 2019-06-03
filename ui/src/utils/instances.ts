@@ -2,6 +2,7 @@ import {HandlerOptions} from '@zeit/integration-utils';
 import fetch from 'node-fetch';
 import {instanceOptions} from '../types/instance';
 import nowMetadata, {metadataInstance} from '../types/metadata';
+import manageLink from './manageLink';
 
 const uuid = require('uuid/v4');
 
@@ -143,6 +144,11 @@ export async function regenerateKey(configurationId: string, handler: HandlerOpt
     metadata.public_key = await response.text();
 
     await handler.zeitClient.setMetadata(metadata);
+    for (const projectId of Object.keys(metadata.linked)) {
+        if (metadata.linked[projectId]) {
+            await manageLink(handler, metadata, metadata.public_key, 'link');
+        }
+    }
 
     return metadata.public_key;
 }
