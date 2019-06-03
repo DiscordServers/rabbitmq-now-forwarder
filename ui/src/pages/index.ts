@@ -1,6 +1,6 @@
 import {htm, withUiHook} from '@zeit/integration-utils';
 import nowMetadata from '../types/metadata';
-import {deleteInstance, getGeneratedKey, getInstance, getInstances} from '../utils/instances';
+import {deleteInstance, getGeneratedKey, getInstance, getInstances, regenerateKey} from '../utils/instances';
 import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
 import createPage from './create';
 import viewInstance from './viewInstance';
@@ -26,7 +26,6 @@ export default withUiHook(async (handler) => {
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
-    const publicKey = await getGeneratedKey(payload.configurationId);
 
     if (!metadata.preferences) {
         metadata.preferences = {
@@ -109,11 +108,20 @@ export default withUiHook(async (handler) => {
                 </Notice>
             `;
             break;
+        case action === 'regenerate-key':
+            await regenerateKey(payload.configurationId, handler)
+            notice = htm`
+                <Notice type="success">
+                    Regenerated public key
+                </Notice>
+            `
+            break;
     }
 
     // Return main screen by default
     payload.clientState = {};
     const instances = await getInstances(handler);
+    const publicKey = await getGeneratedKey(payload.configurationId);
 
     return htm`
         <Page>
@@ -172,6 +180,9 @@ export default withUiHook(async (handler) => {
                                 ${publicKey}
                             </Textarea>
                         </FsContent>
+                        <FsFooter>
+                            <Button action="regenerate-key">Regenerate</Button>
+                        </FsFooter>
                     </Fieldset>
                 </Box>
             </Box>
