@@ -26,7 +26,7 @@ export default withUiHook(async (handler) => {
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
-    let publicKey = metadata.public_key;
+    let publicKey = '';
 
     if (!metadata.preferences) {
         metadata.preferences = {
@@ -122,6 +122,10 @@ export default withUiHook(async (handler) => {
     // Return main screen by default
     payload.clientState = {};
     const instances = await getInstances(handler);
+
+    if (!publicKey) {
+        publicKey = await getGeneratedKey(payload.configurationId);
+    }
 
     return htm`
         <Page>

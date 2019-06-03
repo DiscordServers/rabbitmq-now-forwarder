@@ -7,8 +7,8 @@ import getMetadata from '../utils/getMetadata';
 export interface RequestWithMetadata extends IncomingMessage {
     query: {
         configurationId: string;
-        [key: string]: string
-    }
+        [key: string]: string;
+    };
     metadata: Metadata;
 }
 
@@ -30,4 +30,4 @@ export default (handler: RequestHandler) => async (req: RequestWithMetadata, res
     } catch (e) {
         return send(res, 403, e.message);
     }
-}
+};
