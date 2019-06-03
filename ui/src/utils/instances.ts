@@ -131,9 +131,11 @@ export async function getGeneratedKey(configurationId: string): Promise<string> 
 }
 
 export async function regenerateKey(configurationId: string, handler: HandlerOptions) {
-    const {zeitClient} = handler;
-
-    await zeitClient.fetch(`${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`, {});
+    await fetch(`${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`, {
+        headers: {
+            Authorization: `Bearer ${handler.payload.token}`
+        }
+    });
     return;
 }
 
