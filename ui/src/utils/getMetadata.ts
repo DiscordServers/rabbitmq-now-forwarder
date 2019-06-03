@@ -6,14 +6,14 @@ const getMetadata = async (token: string, configurationId: string): Promise<Meta
         `https://api.zeit.co/v1/integrations/configuration/${configurationId}/metadata`,
         {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: token,
             },
         },
     );
 
     const metadata = await response.json();
     if (metadata.error) {
-        throw new Error(metadata.error);
+        throw new Error(JSON.stringify(metadata.error));
     }
 
     return metadata;
