@@ -132,7 +132,6 @@ export async function getGeneratedKey(configurationId: string): Promise<string> 
 }
 
 export async function regenerateKey(configurationId: string, handler: HandlerOptions): Promise<string> {
-    console.log(`${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`);
     const response = await fetch(`${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`, {
         method: 'POST',
         headers: {
