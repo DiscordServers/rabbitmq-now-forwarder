@@ -109,12 +109,12 @@ export default withUiHook(async (handler) => {
             `;
             break;
         case action === 'regenerate-key':
-            await regenerateKey(payload.configurationId, handler)
+            await regenerateKey(payload.configurationId, handler);
             notice = htm`
                 <Notice type="success">
                     Regenerated public key
                 </Notice>
-            `
+            `;
             break;
     }
 

@@ -131,10 +131,10 @@ export async function getGeneratedKey(configurationId: string): Promise<string> 
 }
 
 export async function regenerateKey(configurationId: string, handler: HandlerOptions) {
-    const {zeitClient} = handler
+    const {zeitClient} = handler;
 
     await zeitClient.fetch(`${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`, {});
-    return
+    return;
 }
 
 export async function deleteInstance(instanceId: string, handler: HandlerOptions) {
