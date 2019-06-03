@@ -45,6 +45,9 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         }),
     });
     const json: AccessTokenResponse = await response.json();
+    if ((json as any).error) {
+        return send(res, 500, json);
+    }
     console.log('New Installation: ', json);
 
     const {publicKey, privateKey} = await generateKeys();
