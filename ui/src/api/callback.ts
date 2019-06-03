@@ -61,7 +61,7 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
     try {
         console.log('Saving to database');
         const resp = await (await getCollection()).insertOne(document);
-        console.log('Saved to database', resp);
+        console.log('Saved to database', document);
 
         res.statusCode = 301;
         res.setHeader('Location', next);
