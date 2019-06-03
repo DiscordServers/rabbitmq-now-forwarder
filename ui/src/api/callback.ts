@@ -50,7 +50,6 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         userId: json.user_id,
         teamId: json.team_id,
         configurationId: query.configurationId,
-        installationId: json.installation_id,
         accessToken: json.access_token,
         publicKey,
         privateKey,
