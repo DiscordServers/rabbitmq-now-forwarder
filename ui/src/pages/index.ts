@@ -124,7 +124,7 @@ export default withUiHook(async (handler) => {
     const instances = await getInstances(handler);
 
     if (!publicKey) {
-        publicKey = await getGeneratedKey(payload.configurationId)
+        publicKey = await getGeneratedKey(payload.configurationId);
     }
 
     return htm`
