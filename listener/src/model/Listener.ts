@@ -40,7 +40,11 @@ export default class Listener {
             return;
         }
 
-        this.channel = await getRabbitChannel(this.instance.instanceMetadata);
+        try {
+            this.channel = await getRabbitChannel(this.instance.instanceMetadata);
+        } catch (e) {
+            return this.disableListener(e)
+        }
 
         const brake = new Brakes(this.processMessage, {
             statInterval:    2500,
@@ -132,7 +136,7 @@ export default class Listener {
         }
     };
 
-    private async disableListener(): Promise<void> {
+    private async disableListener(error?: Error): Promise<void> {
         await this.stop();
 
         const newMetadata = {...this.instance.metadata};
@@ -142,12 +146,12 @@ export default class Listener {
         listener.enabled = false;
 
         await setMetadata(this.configuration, newMetadata);
-        this.sendDisabledEmail().catch(() => {
+        this.sendDisabledEmail(error).catch(() => {
             /* Ignoring errors from this for now, until we are un-sandboxed */
         });
     }
 
-    private async sendDisabledEmail(): Promise<void> {
+    private async sendDisabledEmail(error?: Error): Promise<void> {
         if (!this.instance.metadata.preferences.email_notifications) {
             return;
         }
@@ -176,6 +180,7 @@ It has been failing at over 20%, so we've shut it off until you re-enable it.
 <br />
 <b>Instance Name: </b>${this.instance.instanceMetadata.name}
 <br />     
+${error ? '<b>Possible Error: </b> ' + error + '<br />' : ''}
 <b>Listener Information:</b> 
 <br />
 <code><pre>${JSON.stringify(this.metadata, null, 4)}</pre></code>`,
