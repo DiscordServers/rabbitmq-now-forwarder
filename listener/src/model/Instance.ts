@@ -33,7 +33,7 @@ export default class Instance extends EventEmitter {
         await heartbeat(this.configuration, this.instanceMetadata);
 
         const metadata = await getMetadata(this.configuration);
-        const instance = metadata.instances.find((i) => i.id === this.id);
+        const instance = (metadata.instances || []).find((i) => i.id === this.id);
 
         // If this instance is no longer in the metadata, close it out.
         if (!instance) {

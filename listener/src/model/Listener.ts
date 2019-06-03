@@ -104,8 +104,8 @@ export default class Listener {
                 headers: {
                     'Content-Type':       'application/json',
                     'X-Configuration-Id': this.configuration.configurationId,
-                    'X-Installation-Id':  this.configuration.installationId,
-                    'X-Instance-Id':      this.id,
+                    'X-Instance-Id':      this.instance.id,
+                    'X-Listener-Id':      this.id,
                 },
                 body:    JSON.stringify(body),
             });
