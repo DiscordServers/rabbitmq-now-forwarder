@@ -1,4 +1,5 @@
 import {IncomingMessage, ServerResponse} from 'http';
+import {send} from 'micro';
 import * as parseQuery from 'micro-query';
 import fetch from 'node-fetch';
 import {stringify} from 'querystring';
@@ -24,6 +25,7 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
     const query: Query = parseQuery(req);
     const {code, next} = query;
     if (!code) {
+        console.error('No code!');
         res.statusCode = 204;
         res.end();
 
@@ -43,6 +45,7 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         }),
     });
     const json: AccessTokenResponse = await response.json();
+    console.log('New Installation: ', json);
 
     const {publicKey, privateKey} = await generateKeys();
 
@@ -55,9 +58,15 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
         privateKey,
     };
 
-    await (await getCollection()).insertOne(document);
+    try {
+        await (await getCollection()).insertOne(document);
 
-    res.statusCode = 301;
-    res.setHeader('Location', next);
-    res.end();
+        res.statusCode = 301;
+        res.setHeader('Location', next);
+        res.end();
+    } catch (e) {
+        console.error('Failed saving new configuration', e);
+
+        return send(res, 500, 'Failed saving configuration');
+    }
 }
