@@ -114,11 +114,12 @@ export async function addInstance(instanceOptions: instanceOptions, handler: Han
         id: instanceId,
         name: instanceOptions.name,
         connection: instance,
-        public_key: await getGeneratedKey(handler.payload.configurationId),
         listeners: [],
     };
 
     metadata.instances.push(metadataInstance);
+    metadata.public_key = await getGeneratedKey(handler.payload.configurationId);
+
     await zeitClient.setMetadata(metadata);
 
     return metadataInstance;
@@ -130,7 +131,7 @@ export async function getGeneratedKey(configurationId: string): Promise<string> 
     return response.text();
 }
 
-export async function regenerateKey(configurationId: string, handler: HandlerOptions) {
+export async function regenerateKey(configurationId: string, handler: HandlerOptions): Promise<string> {
     const response = await fetch(
         `${process.env.ZEIT_HOOK_URL}/regenerateKey/${configurationId}`,
         {
@@ -141,7 +142,12 @@ export async function regenerateKey(configurationId: string, handler: HandlerOpt
         }
     );
 
-    return await response.text();
+    let metadata: nowMetadata = await handler.zeitClient.getMetadata();
+    metadata.public_key = await response.text();
+
+    await handler.zeitClient.setMetadata(metadata);
+
+    return metadata.public_key;
 }
 
 export async function deleteInstance(instanceId: string, handler: HandlerOptions) {

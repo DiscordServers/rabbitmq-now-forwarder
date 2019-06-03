@@ -17,7 +17,6 @@ export interface metadataInstance {
         username: string;
         password: string;
     };
-    public_key: string;
     listeners: metadataListener[];
 }
 
@@ -26,6 +25,7 @@ export interface metadataPreferences {
 }
 
 export default interface nowMetadata {
+    public_key: string;
     instances: metadataInstance[];
     preferences: metadataPreferences;
 }

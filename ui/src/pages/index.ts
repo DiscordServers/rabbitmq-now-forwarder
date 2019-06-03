@@ -26,6 +26,7 @@ export default withUiHook(async (handler) => {
     let notice: string | undefined;
 
     const metadata: nowMetadata = await zeitClient.getMetadata();
+    let publicKey = metadata.public_key;
 
     if (!metadata.preferences) {
         metadata.preferences = {
@@ -109,7 +110,7 @@ export default withUiHook(async (handler) => {
             `;
             break;
         case action === 'regenerate-key':
-            await regenerateKey(payload.configurationId, handler);
+            publicKey = await regenerateKey(payload.configurationId, handler);
             notice = htm`
                 <Notice type="success">
                     Regenerated public key
@@ -121,7 +122,6 @@ export default withUiHook(async (handler) => {
     // Return main screen by default
     payload.clientState = {};
     const instances = await getInstances(handler);
-    const publicKey = await getGeneratedKey(payload.configurationId);
 
     return htm`
         <Page>
@@ -176,7 +176,7 @@ export default withUiHook(async (handler) => {
                     <H1>Public Key</H1>
                     <Fieldset>
                         <FsContent>
-                            <Textarea width="100%" disabled>
+                            <Textarea width="100%" disabled readonly>
                                 ${publicKey}
                             </Textarea>
                         </FsContent>
