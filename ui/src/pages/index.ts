@@ -176,9 +176,7 @@ export default withUiHook(async (handler) => {
                     <H1>Public Key</H1>
                     <Fieldset>
                         <FsContent>
-                            <Textarea width="100%" disabled readonly>
-                                ${publicKey}
-                            </Textarea>
+                            <Textarea width="100%" disabled>${publicKey}</Textarea>
                         </FsContent>
                         <FsFooter>
                             <Button action="regenerate-key">Regenerate</Button>
