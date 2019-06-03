@@ -118,7 +118,6 @@ resource "aws_iam_role_policy" "_" {
     policy = data.aws_iam_policy_document.s3.json
 }
 
-
 data "aws_iam_policy_document" "codebuild" {
     statement {
         effect    = "Allow"
@@ -204,7 +203,7 @@ resource "aws_codepipeline" "source_build_deploy" {
             version   = "1"
             run_order = 1
 
-            input_artifacts = ["code"]
+            input_artifacts  = ["code"]
             output_artifacts = ["task"]
 
             configuration = {

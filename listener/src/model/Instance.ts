@@ -65,6 +65,7 @@ export default class Instance extends EventEmitter {
             }
 
             if (changed) {
+                console.log('Listener changed. Restarting: ' + listener.id);
                 listener.restart();
             }
         })
