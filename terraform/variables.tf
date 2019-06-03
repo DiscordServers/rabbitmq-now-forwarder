@@ -60,6 +60,9 @@ variable "mongo_url" {
     description = "The Mongo URL for the configuration DB"
 }
 
+variable "from_email" {
+    description = "The email that messages are sent from"
+}
 
 # -----------------------------------------------------
 # Autoscaling

@@ -10,7 +10,12 @@
                 "awslogs-stream-prefix": "ecs-rnf"
             }
         },
-        "secrets": [
+        "environment":      [
+            {"name": "SES_ACCESS_KEY", "value": "${access_key_id}"},
+            {"name": "SES_ACCESS_SECRET", "value": "${secret_access_key}"},
+            {"name": "FROM_EMAIL", "value": "${from_email}"}
+        ],
+        "secrets":          [
             {"name": "MONGO_URL", "valueFrom": "${mongo_url_secret_arn}"}
         ],
         "essential":        true,

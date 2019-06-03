@@ -8,6 +8,9 @@ data "template_file" "task_definition-service" {
     vars = {
         "image"                = "${aws_ecr_repository._.repository_url}:master"
         "mongo_url_secret_arn" = aws_secretsmanager_secret_version.database.arn
+        "from_email"           = var.from_email
+        "access_key_id"        = aws_iam_access_key._.id
+        "secret_access_key"    = aws_iam_access_key._.secret
     }
 }
 
@@ -128,9 +131,9 @@ data "aws_iam_policy_document" "ecs_task_role" {
     }
 
     statement {
-        sid     = "2"
-        effect  = "Allow"
-        actions = [
+        sid       = "2"
+        effect    = "Allow"
+        actions   = [
             "secretsmanager:GetSecretValue",
             "secretsmanager:DescribeSecret"
         ]

@@ -27,6 +27,17 @@ data "aws_iam_policy_document" "resource_groups" {
     }
 }
 
+data "aws_iam_policy_document" "ses" {
+    // Systems Management
+    statement {
+        actions   = [
+            "ses:SendEmail",
+        ]
+        effect    = "Allow"
+        resources = ["*"]
+    }
+}
+
 # User
 resource "aws_iam_user" "_" {
     name = "rabbitmq-now-forwarder"
@@ -51,4 +62,10 @@ resource "aws_iam_user_policy" "resource_groups" {
     name   = "resource_groups"
     user   = aws_iam_user._.name
     policy = data.aws_iam_policy_document.resource_groups.json
+}
+
+resource "aws_iam_user_policy" "ses" {
+    name   = "resource_groups"
+    user   = aws_iam_user._.name
+    policy = data.aws_iam_policy_document.ses.json
 }

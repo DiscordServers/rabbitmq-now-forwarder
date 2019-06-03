@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 import Configuration from '../types/Collection/Configuration';
-import {Instance as InstanceMetadata, Listener as ListenerMetadata} from '../types/Metadata';
+import Metadata, {Instance as InstanceMetadata, Listener as ListenerMetadata} from '../types/Metadata';
 import getMetadata from '../util/getMetadata';
 import heartbeat from '../util/heartbeat';
 import Listener from './Listener';
@@ -12,11 +12,16 @@ export default class Instance extends EventEmitter {
 
     public constructor(
         public readonly configuration: Configuration,
-        public readonly metadata: InstanceMetadata,
+        public readonly metadata: Metadata,
+        public readonly instanceMetadata: InstanceMetadata,
     ) {
         super();
         this.interval = setInterval(this.refreshMetadata, 5000);
         this.refreshMetadata();
+    }
+
+    public get id() {
+        return this.instanceMetadata.id;
     }
 
     private refreshMetadata = async () => {
@@ -25,10 +30,10 @@ export default class Instance extends EventEmitter {
         }
         this.refreshing = true;
 
-        await heartbeat(this.configuration, this.metadata);
+        await heartbeat(this.configuration, this.instanceMetadata);
 
         const metadata = await getMetadata(this.configuration);
-        const instance = metadata.instances.find((i) => i.id === this.metadata.id);
+        const instance = metadata.instances.find((i) => i.id === this.id);
 
         // If this instance is no longer in the metadata, close it out.
         if (!instance) {
@@ -40,8 +45,10 @@ export default class Instance extends EventEmitter {
             return;
         }
 
-        this.updateGoodListeners(instance.listeners);
-        this.removeBadListeners(instance.listeners);
+        const listeners = instance.listeners.filter((x) => x.enabled);
+
+        this.updateGoodListeners(listeners);
+        this.removeBadListeners(listeners);
 
         this.refreshing = false;
     };

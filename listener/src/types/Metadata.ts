@@ -4,6 +4,7 @@ export interface Listener {
     endpoint: string;
     expected_status_code?: number;
     retry_on_failure: boolean;
+    enabled: boolean;
 }
 
 export interface Instance {

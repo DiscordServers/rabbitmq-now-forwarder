@@ -25,8 +25,8 @@ const getInstance = async (): Promise<InstanceModel | null> => {
 
         for (const instance of metadata.instances || []) {
             const dbInstance = await instancesCollection.findOne({instanceId: instance.id});
-            if (!dbInstance || dbInstance.lastHeartbeat < Date.now() - 1000 * 60 * 5) {
-                return new InstanceModel(configuration, instance);
+            if (!dbInstance || dbInstance.lastHeartbeat < Date.now() - 1000 * 15) {
+                return new InstanceModel(configuration, metadata, instance);
             }
         }
     }
