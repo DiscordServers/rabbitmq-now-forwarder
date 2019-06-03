@@ -59,7 +59,9 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
     };
 
     try {
-        await (await getCollection()).insertOne(document);
+        console.log('Saving to database');
+        const resp = await (await getCollection()).insertOne(document);
+        console.log('Saved to database', resp);
 
         res.statusCode = 301;
         res.setHeader('Location', next);

@@ -1,6 +1,6 @@
 import {Collection, Db, MongoClient} from 'mongodb';
 
-const client = new MongoClient(process.env.MONGO_URL);
+let client: MongoClient;
 const dbName = process.env.NOW_REGION === 'dev1' ? 'dev' : 'production';
 
 let db: Db;
@@ -17,7 +17,7 @@ export interface Configuration {
 
 const getCollection = async (): Promise<Collection<Configuration>> => {
     if (!client.isConnected()) {
-        await client.connect();
+        client = await MongoClient.connect(process.env.MONGO_URL);
         db = client.db(dbName);
         collection = db.collection<Configuration>('configurations');
 
