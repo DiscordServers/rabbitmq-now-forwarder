@@ -1,23 +1,31 @@
 import {EventEmitter} from 'events';
 import Configuration from '../types/Collection/Configuration';
 import Metadata, {Instance as InstanceMetadata, Listener as ListenerMetadata} from '../types/Metadata';
+import getConfiguration from '../util/getConfiguration';
 import getMetadata from '../util/getMetadata';
 import heartbeat from '../util/heartbeat';
 import Listener from './Listener';
 
 export default class Instance extends EventEmitter {
+    public get configuration() {
+        return this._configuration;
+    }
+
     private refreshing: boolean = false;
     private queueListeners: Listener[] = [];
     private interval: NodeJS.Timeout;
 
     public constructor(
-        public readonly configuration: Configuration,
+        private _configuration: Configuration,
         public readonly metadata: Metadata,
         public readonly instanceMetadata: InstanceMetadata,
     ) {
         super();
-        this.interval = setInterval(this.refreshMetadata, 5000);
+        this.interval = setInterval(this.refreshMetadata, 60000);
         this.refreshMetadata();
+
+        setInterval(() => heartbeat(this.configuration, this.instanceMetadata), 5000);
+        heartbeat(this.configuration, this.instanceMetadata)
     }
 
     public get id() {
@@ -30,8 +38,7 @@ export default class Instance extends EventEmitter {
         }
         this.refreshing = true;
 
-        await heartbeat(this.configuration, this.instanceMetadata);
-
+        this._configuration = await getConfiguration(this.configuration);
         const metadata = await getMetadata(this.configuration);
         const instance = (metadata.instances || []).find((i) => i.id === this.id);
 
