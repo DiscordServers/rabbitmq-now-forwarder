@@ -15,7 +15,7 @@ phases:
     post_build:
         commands:
         - docker push $REPO_URL
-        - printf '[{"name":"app","imageUri":"%s"}]' $REPO_URL:$BRANCH > imagedefinitions.json
+        - printf '[{"name":"listener","imageUri":"%s"}]' $REPO_URL:$BRANCH > imagedefinitions.json
 
 artifacts:
     files:
