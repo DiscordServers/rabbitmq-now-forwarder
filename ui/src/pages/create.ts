@@ -63,6 +63,10 @@ export default async function createPage(handler: HandlerOptions, notice: string
 
                 <Fieldset>
                     <FsContent>
+                        <P>
+                            We require all this information in order to connect to your queue and forward messages to your endpoint.
+                            Rest assured, we neither log, nor store any messages, and all of your connection info is stored securely.
+                        </P>
                         <Box display="flex">
                             <Box padding-right="10px">
                                 <Input label="Instance Name" name="instanceName" value=${formStore.instanceName} />
