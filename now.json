@@ -17,6 +17,7 @@
     "routes": [
         {"src": "/test", "dest": "ui/src/api/test.ts"},
         {"src": "/getPublicKey/(.*)", "dest": "ui/src/api/getPublicKey.ts?configurationId=$1"},
+        {"src": "/regenerateKey/(.*)", "dest": "ui/src/api/regenerateKey.ts?configurationId=$1"},
         {"src": "/callback", "dest": "ui/src/api/callback.ts"},
         {"src": "/", "dest": "ui/src/pages/index.ts"}
     ]
