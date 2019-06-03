@@ -16,9 +16,8 @@ export default async function manageLink(
             const secretName = await zeitClient.ensureSecret('rabbit_forwarder_public_key', publicKey);
             await zeitClient.upsertEnv(payload.projectId, 'RABBIT_FORWARDER_PUBLIC_KEY', secretName);
         } else {
-            // Todo - Delete these instead
-            const secretName = await zeitClient.ensureSecret('rabbit_forwarder_public_key', '-- DELETED --');
-            await zeitClient.upsertEnv(payload.projectId, 'RABBIT_FORWARDER_PUBLIC_KEY', secretName);
+            await zeitClient.fetch('/v2/now/secrets/rabbit_forwarder_public_key', {method: 'DELETE'});
+            await zeitClient.removeEnv(payload.projectId, 'RABBIT_FORWARDER_PUBLIC_KEY');
         }
 
         metadata.linked[payload.projectId] = action === 'link';

@@ -146,8 +146,8 @@ export default withUiHook(async (handler) => {
                 await manageLink(handler, metadata, publicKey, action as 'link' | 'unlink');
                 // @todo Remove this notice
                 if (action === 'unlink') {
-                    notice = htm`<Notice type="warn">
-                    Un-linking does not currently remove the secret or the environment variable.
+                    notice = htm`<Notice type="success">
+                    Project has been un-linked
                 </Notice>`;
                 } else {
                     notice = htm`<Notice type="success">
