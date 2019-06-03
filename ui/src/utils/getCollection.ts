@@ -16,7 +16,7 @@ export interface Configuration {
 }
 
 const getCollection = async (): Promise<Collection<Configuration>> => {
-    if (!client.isConnected()) {
+    if (!client || !client.isConnected()) {
         client = await MongoClient.connect(process.env.MONGO_URL);
         db = client.db(dbName);
         collection = db.collection<Configuration>('configurations');
