@@ -36,8 +36,8 @@ data "aws_iam_policy_document" "_" {
         effect  = "Allow"
 
         resources = [
-            "arn:aws:logs:*:*:log-group:/rabbitnowforwarder/*",
-            "arn:aws:logs:*:*:log-group:/rabbitnowforwarder/*:*:*"
+            "arn:aws:logs:*:*:log-group:rabbitnowforwarder",
+            "arn:aws:logs:*:*:log-group:rabbitnowforwarder:*:*"
         ]
     }
 

@@ -5,6 +5,7 @@ import getLogger from './util/getLogger';
 import sleep from './util/sleep';
 
 const logger = getLogger('main', 'index.ts');
+
 async function index() {
     const instances = [];
     let usage: number = await cpu.usage();
@@ -29,4 +30,4 @@ async function index() {
     }
 }
 
-index().catch(logger.error);
+index().catch((err) => logger.error(err));
