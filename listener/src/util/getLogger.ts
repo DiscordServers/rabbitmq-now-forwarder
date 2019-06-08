@@ -2,10 +2,12 @@ import winston, {Logger} from 'winston';
 import CloudWatchTransport from 'winston-cloudwatch';
 
 const getLogger = (groupName: string, streamName: string): Logger => {
+    const logGroupName = '/rabbitnowforwarder/' + (process.env.NODE_ENV || 'production') + '/groupName';
+
     const transport  = new CloudWatchTransport({
-        level:           'debug',
-        logGroupName:    '/rabbitnowforwarder/' + groupName,
+        logGroupName,
         logStreamName:   streamName,
+        level:           'debug',
         awsRegion:       'us-east-1',
         awsAccessKeyId:  process.env.ACCESS_KEY,
         awsSecretKey:    process.env.ACCESS_SECRET,
