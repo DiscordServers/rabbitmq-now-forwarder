@@ -11,8 +11,8 @@
             }
         },
         "environment":      [
-            {"name": "SES_ACCESS_KEY", "value": "${access_key_id}"},
-            {"name": "SES_ACCESS_SECRET", "value": "${secret_access_key}"},
+            {"name": "ACCESS_KEY", "value": "${access_key_id}"},
+            {"name": "ACCESS_SECRET", "value": "${secret_access_key}"},
             {"name": "FROM_EMAIL", "value": "${from_email}"}
         ],
         "secrets":          [
