@@ -48,10 +48,7 @@ export default class Instance extends EventEmitter {
             {upsert: true},
         );
 
-        this.logger.debug(
-            'Heartbeating for: ' + this.id,
-            {listeners: this.queueListeners.length}
-        );
+        this.logger.debug('Heartbeat for: %s - %j', this.id, {listeners: this.queueListeners.length});
     };
 
     private refreshMetadata = async () => {

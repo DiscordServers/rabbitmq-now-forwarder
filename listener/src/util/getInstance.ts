@@ -10,7 +10,7 @@ import getMetadata from './getMetadata';
  * @return {Promise<void>}
  */
 const getInstance = async (): Promise<InstanceModel | null> => {
-    const logger = getLogger('main', 'getInstance');
+    const logger = getLogger('main', 'util/getInstance.ts');
     const configurationCollection = await getCollection<Configuration>('configurations');
     const instancesCollection = await getCollection<Instance>('instances');
 
@@ -19,7 +19,7 @@ const getInstance = async (): Promise<InstanceModel | null> => {
         const configuration = await configurations.next();
         const metadata = await getMetadata(configuration);
         if (metadata.error) {
-            logger.error('Bad access code on: ' + configuration.configurationId, metadata);
+            logger.error('Bad access code on: %s - %j', configuration.configurationId, metadata);
             await configurationCollection.deleteOne({configurationId: configuration.configurationId});
 
             continue;

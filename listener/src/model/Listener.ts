@@ -48,7 +48,7 @@ export default class Listener {
 
         try {
             this.channel = await getRabbitChannel(this.instance.instanceMetadata);
-            this.logger.debug('Connected to rabbitmq instance: ' + this.instance.instanceMetadata.connection.host);
+            this.logger.debug('Connected to rabbitmq instance: %s', this.instance.instanceMetadata.connection.host);
         } catch (e) {
 
             this.logger.error('Failed to get rabbit channel. Disabling listener: ', e);
@@ -65,13 +65,13 @@ export default class Listener {
             timeout:         6000,
         });
         brake.on('circuitOpen', () => {
-            this.logger.error('Circuit tripped: ' + this.id);
+            this.logger.error('Circuit tripped: %s', this.id);
             this.disableListener().then(brake.destroy.bind(brake));
         });
 
         await this.channel.consume(this.metadata.queue, (msg) =>
             brake.exec(msg).catch((e) => {
-                this.logger.error('Hook Error: %s', e.message)
+                this.logger.error('Hook Error: %s', e.message);
             }),
         );
         this.started = true;
@@ -129,7 +129,9 @@ export default class Listener {
             });
 
             this.logger.debug(
-                `Expected Status Code: ${this.metadata.expected_status_code}\tActual Status Code: ${response.status}`,
+                'Expected Status Code: %d\tActual StatusCode: %d',
+                this.metadata.expected_status_code,
+                response.status,
             );
             if (response.status === this.metadata.expected_status_code) {
                 this.channel.ack(message, false);
@@ -165,7 +167,7 @@ export default class Listener {
 
         await setMetadata(this.configuration, newMetadata);
         this.sendDisabledEmail(error).catch((err) => {
-            this.logger.error('Failed to send disabled email: ', err);
+            this.logger.error('Failed to send disabled email: %j', err);
             /* Ignoring errors from this for now, until we are un-sandboxed */
         });
     }
