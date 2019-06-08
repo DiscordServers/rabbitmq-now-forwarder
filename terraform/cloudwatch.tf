@@ -43,3 +43,12 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_low" {
         App       = "RNF"
     }
 }
+
+resource "aws_cloudwatch_log_group" "rabbitnowforwarder" {
+    name              = "rabbitnowforwarder"
+    retention_in_days = 30
+    tags              = {
+        Terraform = "true"
+        App       = "RNF"
+    }
+}

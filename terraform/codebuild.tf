@@ -232,7 +232,7 @@ resource "aws_codepipeline" "source_build_deploy" {
     }
 
     lifecycle {
-        ignore_changes = ["stage[0]"]
+        ignore_changes = ["stage"]
     }
 }
 

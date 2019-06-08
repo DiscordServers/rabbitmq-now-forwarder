@@ -9,8 +9,8 @@ import getMetadata from './getMetadata';
  * I'm not very happy with this logic. Would like to make it more resource efficient
  * @return {Promise<void>}
  */
+const logger = getLogger('main', 'util/getInstance.ts');
 const getInstance = async (): Promise<InstanceModel | null> => {
-    const logger = getLogger('main', 'util/getInstance.ts');
     const configurationCollection = await getCollection<Configuration>('configurations');
     const instancesCollection = await getCollection<Instance>('instances');
 

@@ -27,7 +27,8 @@ export default class Instance extends EventEmitter {
         public readonly instanceMetadata: InstanceMetadata,
     ) {
         super();
-        this.logger = getLogger('instances', this.id);
+        this.logger = getLogger('instance', 'model/Instance.ts', this.instanceMetadata);
+        this.logger.info('New Instance');
 
         this.interval = setInterval(this.refreshMetadata, 60000);
         this.refreshMetadata();

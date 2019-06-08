@@ -25,7 +25,8 @@ export default class Listener {
     private readonly logger: Logger;
 
     public constructor(public readonly instance: Instance, private _metadata: ListenerMetadata) {
-        this.logger = getLogger('instances/' + this.instance.id, this.id);
+        this.logger = getLogger('listener', 'model/Listener.ts', this.metadata);
+        this.logger.info('New Listener');
     }
 
     public get id(): string {
