@@ -1,7 +1,8 @@
 # Policy
-data "aws_iam_policy_document" "secrets" {
+data "aws_iam_policy_document" "_" {
     // Secrets Management
     statement {
+        sid = "secrets"
         actions = [
             "secretsmanager:GetSecretValue",
             "secretsmanager:DescribeSecret"
@@ -13,24 +14,19 @@ data "aws_iam_policy_document" "secrets" {
             aws_secretsmanager_secret.database.arn
         ]
     }
-}
 
-data "aws_iam_policy_document" "resource_groups" {
-    // Systems Management
+    // Logs
     statement {
-        actions   = [
-            "resource-groups:*",
-            "tag:*"
+        sid     = "cwg"
+        actions = [
+            "logs:CreateLogGroup"
         ]
-        effect    = "Allow"
+        effect  = "Allow"
+
         resources = ["*"]
     }
-}
-
-data "aws_iam_policy_document" "cloudwatch" {
-    // Secrets Management
     statement {
-        sid = "1"
+        sid = "cws"
         actions = [
             "logs:PutRetentionPolicy",
             "logs:DescribeLogStreams",
@@ -40,28 +36,14 @@ data "aws_iam_policy_document" "cloudwatch" {
         effect  = "Allow"
 
         resources = [
-            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*",
-            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream",
-            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream:",
-            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream:*",
-            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:*:*"
+            "arn:aws:logs:*:*:log-group:/rabbitnowforwarder/*",
+            "arn:aws:logs:*:*:log-group:/rabbitnowforwarder/*:*:*"
         ]
     }
 
+    // Sending Emails
     statement {
-        sid     = "2"
-        actions = [
-            "logs:CreateLogGroup"
-        ]
-        effect  = "Allow"
-
-        resources = ["*"]
-    }
-}
-
-data "aws_iam_policy_document" "ses" {
-    // Systems Management
-    statement {
+        sid       = "ses"
         actions   = [
             "ses:SendEmail",
         ]
@@ -84,26 +66,7 @@ resource "aws_iam_access_key" "_" {
     user = aws_iam_user._.name
 }
 
-resource "aws_iam_user_policy" "secrets" {
-    name   = "secrets_manager"
+resource "aws_iam_user_policy" "_" {
     user   = aws_iam_user._.name
-    policy = data.aws_iam_policy_document.secrets.json
-}
-
-resource "aws_iam_user_policy" "resource_groups" {
-    name   = "resource_groups"
-    user   = aws_iam_user._.name
-    policy = data.aws_iam_policy_document.resource_groups.json
-}
-
-resource "aws_iam_user_policy" "cloudwatch" {
-    name   = "cloudwatch"
-    user   = aws_iam_user._.name
-    policy = data.aws_iam_policy_document.cloudwatch.json
-}
-
-resource "aws_iam_user_policy" "ses" {
-    name   = "resource_groups"
-    user   = aws_iam_user._.name
-    policy = data.aws_iam_policy_document.ses.json
+    policy = data.aws_iam_policy_document._.json
 }
