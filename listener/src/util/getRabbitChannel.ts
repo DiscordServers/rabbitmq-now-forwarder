@@ -18,16 +18,9 @@ const getRabbitConnection = async (instance: Instance): Promise<Connection> => {
 };
 
 const getRabbitChannel = async (instance: Instance) => {
-    try {
-        const connection = await getRabbitConnection(instance);
-        console.log('Connected to rabbitmq instance: ' + instance.id);
+    const connection = await getRabbitConnection(instance);
 
-        return connection.createChannel();
-    } catch (e) {
-        console.error(e);
-
-        throw e;
-    }
+    return connection.createChannel();
 };
 
 export default getRabbitChannel;

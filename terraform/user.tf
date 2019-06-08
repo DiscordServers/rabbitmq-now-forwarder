@@ -27,6 +27,38 @@ data "aws_iam_policy_document" "resource_groups" {
     }
 }
 
+data "aws_iam_policy_document" "cloudwatch" {
+    // Secrets Management
+    statement {
+        sid = "1"
+        actions = [
+            "logs:PutRetentionPolicy",
+            "logs:DescribeLogStreams",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+        ]
+        effect  = "Allow"
+
+        resources = [
+            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*",
+            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream",
+            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream:",
+            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:log-stream:*",
+            "arn:aws:logs:us-east-1:*:log-group:/rabbitnowforwarder/*:*:*"
+        ]
+    }
+
+    statement {
+        sid     = "2"
+        actions = [
+            "logs:CreateLogGroup"
+        ]
+        effect  = "Allow"
+
+        resources = ["*"]
+    }
+}
+
 data "aws_iam_policy_document" "ses" {
     // Systems Management
     statement {
@@ -62,6 +94,12 @@ resource "aws_iam_user_policy" "resource_groups" {
     name   = "resource_groups"
     user   = aws_iam_user._.name
     policy = data.aws_iam_policy_document.resource_groups.json
+}
+
+resource "aws_iam_user_policy" "cloudwatch" {
+    name   = "cloudwatch"
+    user   = aws_iam_user._.name
+    policy = data.aws_iam_policy_document.cloudwatch.json
 }
 
 resource "aws_iam_user_policy" "ses" {

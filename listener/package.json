@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
     "scripts": {
-        "dev": "ts-node-dev --require dotenv/config src/index.ts",
+        "dev": "NODE_ENV=development ts-node-dev --require dotenv/config src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js",
         "prettier": "prettier --write --single-quote './src/**/*.ts'"
@@ -43,7 +43,9 @@
         "node-rsa": "^1.0.5",
         "node-ses": "^2.2.1",
         "object-hash": "^1.3.1",
-        "ts-node-dev": "^1.0.0-pre.39"
+        "ts-node-dev": "^1.0.0-pre.39",
+        "winston": "^3.2.1",
+        "winston-cloudwatch": "^2.0.5"
     },
     "devDependencies": {
         "@types/amqplib": "^0.5.12",

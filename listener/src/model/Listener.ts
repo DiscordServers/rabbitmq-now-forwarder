@@ -4,8 +4,10 @@ import deepEqual from 'deep-equal';
 import fetch from 'node-fetch';
 import NodeRSA from 'node-rsa';
 import ses from 'node-ses';
+import {Logger} from 'winston';
 import Configuration from '../types/Collection/Configuration';
 import {Listener as ListenerMetadata} from '../types/Metadata';
+import getLogger from '../util/getLogger';
 import getRabbitChannel from '../util/getRabbitChannel';
 import getTeam, {Team} from '../util/getTeam';
 import getTeamMembers, {TeamMember} from '../util/getTeamMembers';
@@ -13,14 +15,17 @@ import getUser, {User} from '../util/getUser';
 import setMetadata from '../util/setMetadata';
 import Instance from './Instance';
 
-const client = ses.createClient({key: process.env.SES_ACCESS_KEY, secret: process.env.SES_ACCESS_SECRET});
+const client = ses.createClient({key: process.env.ACCESS_KEY, secret: process.env.ACCESS_SECRET});
 
 export default class Listener {
     private started: boolean = false;
 
     private channel: Channel;
 
+    private readonly logger: Logger;
+
     public constructor(public readonly instance: Instance, private _metadata: ListenerMetadata) {
+        this.logger = getLogger('instances/' + this.instance.id, this.id);
     }
 
     public get id(): string {
@@ -39,11 +44,16 @@ export default class Listener {
         if (this.started) {
             return;
         }
+        this.logger.debug('Starting');
 
         try {
             this.channel = await getRabbitChannel(this.instance.instanceMetadata);
+            this.logger.debug('Connected to rabbitmq instance: ' + this.instance.instanceMetadata.connection.host);
         } catch (e) {
-            return this.disableListener(e)
+
+            this.logger.error('Failed to get rabbit channel. Disabling listener: ', e);
+
+            return this.disableListener(e);
         }
 
         const brake = new Brakes(this.processMessage, {
@@ -55,12 +65,14 @@ export default class Listener {
             timeout:         6000,
         });
         brake.on('circuitOpen', () => {
-            console.log('Circuit tripped: ' + this.id);
+            this.logger.error('Circuit tripped: ' + this.id);
             this.disableListener().then(brake.destroy.bind(brake));
         });
 
         await this.channel.consume(this.metadata.queue, (msg) =>
-            brake.exec(msg).catch((e) => console.error('Hook Error: ', e.message)),
+            brake.exec(msg).catch((e) => {
+                this.logger.error('Hook Error: %s', e.message)
+            }),
         );
         this.started = true;
     }
@@ -69,6 +81,7 @@ export default class Listener {
         if (!this.started) {
             return;
         }
+        this.logger.debug('Stopping');
 
         await this.channel.close();
         this.started = false;
@@ -93,6 +106,7 @@ export default class Listener {
 
         const key       = new NodeRSA(this.instance.configuration.privateKey);
         const signature = key.sign(message.content.toString(), 'base64');
+        this.logger.debug('New Message!');
 
         const body = {
             message:     message.content.toString(),
@@ -114,6 +128,9 @@ export default class Listener {
                 body:    JSON.stringify(body),
             });
 
+            this.logger.debug(
+                `Expected Status Code: ${this.metadata.expected_status_code}\tActual Status Code: ${response.status}`,
+            );
             if (response.status === this.metadata.expected_status_code) {
                 this.channel.ack(message, false);
 
@@ -123,11 +140,12 @@ export default class Listener {
             throw new Error('Bad status code: ' + response.status);
         } catch (error) {
             if (this.metadata.retry_on_failure) {
+                this.logger.debug('Retrying failed message');
                 setTimeout(() => {
                     try {
                         this.channel.nack(message, false, true);
                     } catch (e) {
-                        // console.error('Can\'t requeue. Channel closed');
+                        this.logger.error('Can\'t requeue. Channel closed.');
                     }
                 }, 1000 * 5);
             }
@@ -146,7 +164,8 @@ export default class Listener {
         listener.enabled = false;
 
         await setMetadata(this.configuration, newMetadata);
-        this.sendDisabledEmail(error).catch(() => {
+        this.sendDisabledEmail(error).catch((err) => {
+            this.logger.error('Failed to send disabled email: ', err);
             /* Ignoring errors from this for now, until we are un-sandboxed */
         });
     }

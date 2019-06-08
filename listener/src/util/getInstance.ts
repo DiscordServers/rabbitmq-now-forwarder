@@ -2,6 +2,7 @@ import Configuration from '../types/Collection/Configuration';
 import Instance from '../types/Collection/Instance';
 import InstanceModel from '../model/Instance';
 import getCollection from './getCollection';
+import getLogger from './getLogger';
 import getMetadata from './getMetadata';
 
 /**
@@ -9,6 +10,7 @@ import getMetadata from './getMetadata';
  * @return {Promise<void>}
  */
 const getInstance = async (): Promise<InstanceModel | null> => {
+    const logger = getLogger('main', 'getInstance');
     const configurationCollection = await getCollection<Configuration>('configurations');
     const instancesCollection = await getCollection<Instance>('instances');
 
@@ -17,7 +19,7 @@ const getInstance = async (): Promise<InstanceModel | null> => {
         const configuration = await configurations.next();
         const metadata = await getMetadata(configuration);
         if (metadata.error) {
-            console.error('Bad access code on: ' + configuration.configurationId, metadata);
+            logger.error('Bad access code on: ' + configuration.configurationId, metadata);
             await configurationCollection.deleteOne({configurationId: configuration.configurationId});
 
             continue;
@@ -31,7 +33,7 @@ const getInstance = async (): Promise<InstanceModel | null> => {
         }
     }
 
-    console.log('No available instances');
+    logger.debug('No available instances');
 
     return null;
 };
