@@ -11,6 +11,10 @@ const getLogger = (groupName: string, streamName: string): Logger => {
         awsRegion:       'us-east-1',
         awsAccessKeyId:  process.env.ACCESS_KEY,
         awsSecretKey:    process.env.ACCESS_SECRET,
+        awsOptions:      {
+            accessKeyId:     process.env.ACCESS_KEY,
+            secretAccessKey: process.env.ACCESS_SECRET,
+        },
         // @ts-ignore
         retentionInDays: 30,
         errorHandler:    (err) => console.error('Critical Logging Error: ', err),
