@@ -165,11 +165,15 @@ export default class Listener {
 
         listener.enabled = false;
 
-        await setMetadata(this.configuration, newMetadata);
-        this.sendDisabledEmail(error).catch((err) => {
-            this.logger.error('Failed to send disabled email: %j', err);
-            /* Ignoring errors from this for now, until we are un-sandboxed */
-        });
+        try {
+            await setMetadata(this.configuration, newMetadata);
+            this.sendDisabledEmail(error).catch((err) => {
+                this.logger.error('Failed to send disabled email: %j', err);
+                /* Ignoring errors from this for now, until we are un-sandboxed */
+            });
+        } catch (e) {
+            this.logger.error('Failed to update the metadata: %j', e);
+        }
     }
 
     private async sendDisabledEmail(error?: Error): Promise<void> {
