@@ -2,7 +2,7 @@ import winston, {Logger} from 'winston';
 import CloudWatchTransport from 'winston-cloudwatch';
 
 const getLogger = (groupName: string, streamName: string): Logger => {
-    const logGroupName = '/rabbitnowforwarder/' + (process.env.NODE_ENV || 'production') + '/groupName';
+    const logGroupName = '/rabbitnowforwarder/' + (process.env.NODE_ENV || 'production') + '/' + groupName;
 
     const transport  = new CloudWatchTransport({
         logGroupName,
