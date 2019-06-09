@@ -68,6 +68,7 @@ export default class Instance extends EventEmitter {
         const metadata = await getMetadata(this.configuration);
         const changed = !deepEqual(this.metadata, metadata);
         if (!changed) {
+            this.refreshing = false;
             this.logger.debug('No Change');
             return;
         }
