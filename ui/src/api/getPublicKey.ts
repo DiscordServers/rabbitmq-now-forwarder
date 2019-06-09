@@ -1,6 +1,8 @@
 import {IncomingMessage, ServerResponse} from 'http';
+
 import {send} from 'micro';
 import * as parseQuery from 'micro-query';
+
 import getCollection, {Configuration} from '../utils/getCollection';
 
 export default async function(req: IncomingMessage, res: ServerResponse) {

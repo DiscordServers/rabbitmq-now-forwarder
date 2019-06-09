@@ -1,4 +1,5 @@
 import {send} from 'micro';
+
 import withMetadata, {RequestWithMetadata} from '../hocs/withMetadata';
 import {generateKeys} from '../utils/generateKeys';
 import getCollection, {Configuration} from '../utils/getCollection';

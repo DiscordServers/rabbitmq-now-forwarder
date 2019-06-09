@@ -4,7 +4,7 @@
     "description": "Forward your RabbitMQ messages to a Zeit Now endpoint",
     "scripts": {
         "dev": "now dev -p 3000",
-        "prettier": "prettier --write --single-quote './src/**/*.ts'"
+        "lint": "eslint --ext .tsx --fix src/**/*.ts"
     },
     "publishConfig": {
         "access": "public"
@@ -33,20 +33,27 @@
         "keypair": "^1.0.1",
         "micro": "^9.3.4",
         "micro-query": "^0.3.0",
-        "mongodb": "^3.2.6",
+        "mongodb": "^3.2.7",
         "node-fetch": "^2.6.0",
         "node-rsa": "^1.0.5",
-        "uuid": "^3.3.2"
+        "object-path": "^0.11.4",
+        "on-change": "^1.4.0",
+        "uuid": "^3.3.2",
+        "zeit-router": "0.0.1"
     },
     "devDependencies": {
+        "@types/eslint": "^4.16.6",
         "@types/micro": "^7.3.3",
         "@types/mongodb": "^3.1.28",
-        "@types/node": "^12.0.4",
-        "@types/node-fetch": "^2.3.4",
+        "@types/node": "^12.0.7",
+        "@types/node-fetch": "^2.3.5",
         "@types/node-rsa": "^1.0.0",
-        "@types/prettier": "^1.16.4",
+        "@types/object-path": "^0.11.0",
         "@types/uuid": "^3.4.4",
-        "prettier": "^1.17.1",
+        "@typescript-eslint/eslint-plugin": "^1.9.0",
+        "@typescript-eslint/parser": "^1.9.0",
+        "eslint": "^5.16.0",
+        "eslint-plugin-import": "^2.17.3",
         "reflect-metadata": "^0.1.13",
         "typescript": "^3.5.1"
     }

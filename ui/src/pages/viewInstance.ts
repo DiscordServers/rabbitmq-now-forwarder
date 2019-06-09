@@ -1,22 +1,24 @@
-import {htm, HandlerOptions} from '@zeit/integration-utils';
-import {getInstances, addListener, deleteListener, updateInstance, toggleListener} from '../utils/instances';
-import {Table, HeaderItem, TableRow, BodyItem} from '../components/Table';
+import {HandlerOptions, htm} from '@zeit/integration-utils';
+
+import {BodyItem, HeaderItem, Table, TableRow} from '../components/Table';
+import {getInstances, updateInstance} from '../utils/instances';
+import {addListener, deleteListener, toggleListener} from '../utils/listeners';
 
 let formStore = {
-    listenerEndpoint: '',
-    listenerQueue: '',
-    listenerRetryOnFailure: true,
-    listenerExpectedStatusCode: '',
-    instanceName: '',
-    instanceHost: '',
-    instancePort: '',
-    instanceVhost: '',
-    instanceUsername: '',
-    instancePassword: '',
+    listenerEndpoint:           '',
+    listenerQueue:              '',
+    listenerRetryOnFailure:     true,
+    listenerExpectedStatusCode: '200',
+    instanceName:               '',
+    instanceHost:               '',
+    instancePort:               '5672',
+    instanceVhost:              '/',
+    instanceUsername:           '',
+    instancePassword:           '',
 };
 
 export default async function viewInstance(handler: HandlerOptions, notice: string = '', manualInstanceId?: string) {
-    const {payload, zeitClient} = handler;
+    const {payload} = handler;
     const {action, clientState} = payload;
     let instanceId: string;
 
@@ -43,10 +45,10 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
             await updateInstance(
                 instanceId,
                 {
-                    name: clientState.instanceName,
-                    host: clientState.instanceHost,
-                    port: clientState.instancePort,
-                    vhost: clientState.instanceVhost,
+                    name:     clientState.instanceName,
+                    host:     clientState.instanceHost,
+                    port:     clientState.instancePort,
+                    vhost:    clientState.instanceVhost,
                     username: clientState.instanceUsername,
                     password: clientState.instancePassword,
                 },
@@ -68,22 +70,19 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
     }
 
     if (action === 'submit-listener') {
-        formStore.listenerEndpoint = clientState.listenerEndpoint;
-        formStore.listenerQueue = clientState.listenerQueue;
-        formStore.listenerRetryOnFailure = clientState.listenerRetryOnFailure;
+        formStore.listenerEndpoint           = clientState.listenerEndpoint;
+        formStore.listenerQueue              = clientState.listenerQueue;
+        formStore.listenerRetryOnFailure     = clientState.listenerRetryOnFailure;
         formStore.listenerExpectedStatusCode = clientState.listenerExpectedStatusCode;
 
         try {
             await addListener(
                 instanceId,
                 {
-                    endpoint: formStore.listenerEndpoint,
-                    queue: formStore.listenerQueue,
-                    retry_on_failure: formStore.listenerRetryOnFailure === true,
-                    expected_status_code:
-                        formStore.listenerExpectedStatusCode !== ''
-                            ? parseInt(formStore.listenerExpectedStatusCode)
-                            : undefined,
+                    endpoint:           formStore.listenerEndpoint,
+                    queue:              formStore.listenerQueue,
+                    retryOnFailure:     formStore.listenerRetryOnFailure === true,
+                    expectedStatusCode: parseInt(formStore.listenerExpectedStatusCode || '200', 10),
                 },
                 handler,
             );
@@ -119,14 +118,14 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
         }
     }
 
-    const instances = await getInstances(handler);
-    const instance = instances.find((instance) => instance.id === instanceId);
+    const instances    = await getInstances(handler);
+    const instance     = instances.find((instance) => instance.id === instanceId);
     const {connection} = instance;
 
-    formStore.instanceName = instance.name;
-    formStore.instanceHost = connection.host;
-    formStore.instancePort = connection.port;
-    formStore.instanceVhost = connection.vhost;
+    formStore.instanceName     = instance.name;
+    formStore.instanceHost     = connection.host;
+    formStore.instancePort     = connection.port;
+    formStore.instanceVhost    = connection.vhost;
     formStore.instanceUsername = connection.username;
     formStore.instancePassword = connection.password;
 
@@ -138,15 +137,7 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
       </Box>
 
       <Box>
-        ${
-            notice
-                ? htm`
-          <Box padding="1rem">
-            ${notice}
-          </Box>
-        `
-                : ''
-        }
+        ${notice && htm`<Box padding="1rem">${notice}</Box>`}
 
         <H1>Listeners</H1>
         <${Table} header=${htm`
@@ -158,23 +149,25 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
           <${HeaderItem}>Delete Endpoint</${HeaderItem}>
         `}>
           ${instance.listeners.map((listener, index) => {
-              return htm`
+        return htm`
               <${TableRow}>
                 <${BodyItem}>${listener.endpoint}</${BodyItem}>
                 <${BodyItem}>${listener.queue}</${BodyItem}>
-                <${BodyItem}>${listener.expected_status_code || ''}</${BodyItem}>
-                <${BodyItem}>${
-                  listener.expected_status_code ? (listener.retry_on_failure ? 'yes' : 'no') : ''
-              }</${BodyItem}>
-                <${BodyItem}><Button small themeColor="${
-                  listener.enabled ? 'red' : 'green'
-              }" action=${`toggle-listener|${listener.id}`}>${
-                  listener.enabled ? 'Disable' : 'Enable'
-              }</Button></${BodyItem}>
-                <${BodyItem}><Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button></${BodyItem}>
+                <${BodyItem}>${listener.expectedStatusCode || ''}</${BodyItem}>
+                <${BodyItem}>${listener.expectedStatusCode && (listener.retryOnFailure ? 'yes' : 'no')}</${BodyItem}>
+                <${BodyItem}>
+                    <Button small 
+                        themeColor="${listener.enabled ? 'red' : 'green'}"
+                        action=${`toggle-listener|${listener.id}`}>
+                        ${listener.enabled ? 'Disable' : 'Enable'}
+                    </Button>
+                </${BodyItem}>
+                <${BodyItem}>
+                    <Button small themeColor="red" action=${`delete-listener-${index}`}>Delete</Button>
+                </${BodyItem}>
               </${TableRow}>
             `;
-          })}
+    })}
         </${Table}>
 
         <H1>Add listener</H1>
@@ -190,15 +183,13 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
             </Box>
             <Box display="flex">
               <Box padding-right="10px">
-                <Input name="listenerExpectedStatusCode" label="Expected status code" value=${
-                    formStore.listenerExpectedStatusCode
-                } />
+                <Input name="listenerExpectedStatusCode" label="Expected status code"
+                    value=${formStore.listenerExpectedStatusCode} />
               </Box>
             </Box>
             <Box padding-top="10px">
-              <Checkbox name="listenerRetryOnFailure" label="Retry on failure" checked=${
-                  formStore.listenerRetryOnFailure
-              } />
+              <Checkbox name="listenerRetryOnFailure" label="Retry on failure"
+                checked=${formStore.listenerRetryOnFailure} />
             </Box>
           </FsContent>
           <FsFooter>
@@ -222,9 +213,8 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
                 <Input label="Instance Port" name="instancePort" value=${formStore.instancePort} />
               </Box>
               <Box padding-right="10px">
-                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${
-                    formStore.instanceVhost
-                } />
+                <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional"
+                    value=${formStore.instanceVhost} />
               </Box>
             </Box>
             <Box display="flex">
@@ -232,9 +222,8 @@ export default async function viewInstance(handler: HandlerOptions, notice: stri
                 <Input label="Instance Username" name="instanceUsername" value=${formStore.instanceUsername} />
               </Box>
               <Box padding-right="10px">
-                <Input type="password" label="Instance Password" name="instancePassword" value=${
-                    formStore.instancePassword
-                }/>
+                <Input type="password" label="Instance Password" name="instancePassword"
+                    value=${formStore.instancePassword} />
               </Box>
             </Box>
           </FsContent>

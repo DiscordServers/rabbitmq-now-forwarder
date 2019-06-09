@@ -1,11 +1,12 @@
 import {htm, HandlerOptions} from '@zeit/integration-utils';
+
 import {addInstance} from '../utils/instances';
 
 let formStore = {
-    instanceName: '',
-    instanceHost: '',
-    instancePort: '5672',
-    instanceVhost: '',
+    instanceName:     '',
+    instanceHost:     '',
+    instancePort:     '5672',
+    instanceVhost:    '',
     instanceUsername: '',
     instancePassword: '',
 };
@@ -19,10 +20,10 @@ export default async function createPage(handler: HandlerOptions, notice: string
         try {
             const newInstance = await addInstance(
                 {
-                    name: formStore.instanceName,
-                    host: formStore.instanceHost,
-                    port: formStore.instancePort,
-                    vhost: formStore.instanceVhost,
+                    name:     formStore.instanceName,
+                    host:     formStore.instanceHost,
+                    port:     formStore.instancePort,
+                    vhost:    formStore.instanceVhost,
                     username: formStore.instanceUsername,
                     password: formStore.instancePassword,
                 },
@@ -52,14 +53,14 @@ export default async function createPage(handler: HandlerOptions, notice: string
 
             <Box margin-top="15px">
                 ${
-                    notice
-                        ? htm`
+    notice
+        ? htm`
                     <Box padding="1rem">
                         ${notice}
                     </Box>
                 `
-                        : ''
-                }
+        : ''
+}
 
                 <Fieldset>
                     <FsContent>
@@ -81,20 +82,20 @@ export default async function createPage(handler: HandlerOptions, notice: string
                             </Box>
                             <Box padding-right="10px">
                                 <Input label="Instance Virtual Host" name="instanceVhost" placeholder="Optional" value=${
-                                    formStore.instanceVhost
-                                } />
+    formStore.instanceVhost
+} />
                             </Box>
                         </Box>
                         <Box display="flex">
                             <Box padding-right="10px">
                                 <Input label="Instance Username" name="instanceUsername" value=${
-                                    formStore.instanceUsername
-                                } />
+    formStore.instanceUsername
+} />
                             </Box>
                             <Box padding-right="10px">
                                 <Input type="password" label="Instance Password" name="instancePassword" value=${
-                                    formStore.instancePassword
-                                }/>
+    formStore.instancePassword
+}/>
                             </Box>
                         </Box>
                     </FsContent>

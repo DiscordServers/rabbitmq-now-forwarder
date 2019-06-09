@@ -1,16 +1,16 @@
-import {htm, withUiHook} from '@zeit/integration-utils';
-import {UiHookPayload} from '@zeit/integration-utils/lib';
+import {htm, withUiHook,UiHookPayload} from '@zeit/integration-utils';
+
 import {BodyItem, HeaderItem, Table, TableRow} from '../components/Table';
-import nowMetadata from '../types/metadata';
+import Metadata from '../types/Metadata';
 import {
     addInstance,
     deleteInstance,
-    getGeneratedKey,
     getInstance,
     getInstances,
-    regenerateKey,
 } from '../utils/instances';
+import {getGeneratedKey, regenerateKey} from '../utils/keys';
 import manageLink from '../utils/manageLink';
+
 import createPage from './create';
 import viewInstance from './viewInstance';
 
@@ -28,19 +28,34 @@ function startsWithAny(search, ...strings) {
     return false;
 }
 
+const renderLinkBox = (payload: UiHookPayload, metadata: Metadata) => {
+    const notice = htm`<Box font-style="italic" marginTop="1rem">
+    <P>Once linked, the public key will be available to your deployments as the RABBIT_FORWARDER_PUBLIC_KEY env var.</P>
+</Box>`;
+
+    if (!payload.projectId) {
+        return htm`<Box>
+    <P>Select a project to link to it <ProjectSwitcher />.</P>
+    ${notice}
+</Box>`;
+    }
+
+    if (metadata.linked[payload.projectId]) {
+        return htm`<Box><Button small action="unlink">Unlink From Project</Button>${notice}</Box>`;
+    }
+
+    return htm`<Box><Button small action="link">Link To Project</Button>${notice}</Box>`;
+};
+
 export default withUiHook(async (handler) => {
     const {payload, zeitClient} = handler;
     const {action, clientState} = payload;
     let notice: string | undefined;
     let error;
 
-    const metadata: nowMetadata = await zeitClient.getMetadata();
-    if (!metadata.linked) {
-        metadata.linked = {};
-        await zeitClient.setMetadata(metadata);
-    }
+    const metadata = await zeitClient.getMetadata();
 
-    let publicKey               = metadata.public_key;
+    let publicKey = metadata.publicKey;
     if (!publicKey) {
         publicKey = await getGeneratedKey(payload.configurationId);
         if (!publicKey) {
@@ -48,14 +63,7 @@ export default withUiHook(async (handler) => {
         }
     }
 
-    if (!metadata.preferences) {
-        metadata.preferences = {
-            email_notifications: formStore.emailNotifications,
-        };
-        await zeitClient.setMetadata(metadata);
-    }
-
-    formStore.emailNotifications = metadata.preferences.email_notifications;
+    formStore.emailNotifications = metadata.preferences.emailNotifications;
 
     switch (true) {
         case ['add-instance'].includes(action):
@@ -119,8 +127,8 @@ export default withUiHook(async (handler) => {
 
             break;
         case action === 'update-preferences':
-            formStore.emailNotifications             = clientState.emailNotifications;
-            metadata.preferences.email_notifications = clientState.emailNotifications;
+            formStore.emailNotifications            = clientState.emailNotifications;
+            metadata.preferences.emailNotifications = clientState.emailNotifications;
 
             await zeitClient.setMetadata(metadata);
             notice = htm`
@@ -184,12 +192,12 @@ export default withUiHook(async (handler) => {
         return htm`
                         <${TableRow}>
                             <${BodyItem}><Button small action=${`view-instance-${instance.id}`}>${
-            instance.name
-            }</Button></${BodyItem}>
+    instance.name
+}</Button></${BodyItem}>
                             <${BodyItem}>${instance.listeners.length}</${BodyItem}>
                             <${BodyItem}><Button small themeColor="red" action=${`delete-instance-${
-            instance.id
-            }`}>Delete</Button></${BodyItem}>
+    instance.id
+}`}>Delete</Button></${BodyItem}>
                         </${TableRow}>
                         `;
     })}
@@ -230,22 +238,3 @@ export default withUiHook(async (handler) => {
         </Page>
     `;
 });
-
-const renderLinkBox = (payload: UiHookPayload, metadata: nowMetadata) => {
-    const notice = htm`<Box font-style="italic" marginTop="1rem">
-    <P>Once linked, the public key will be available to your deployments as the RABBIT_FORWARDER_PUBLIC_KEY env var.</P>
-</Box>`;
-
-    if (!payload.projectId) {
-        return htm`<Box>
-    <P>Select a project to link to it <ProjectSwitcher />.</P>
-    ${notice}
-</Box>`;
-    }
-
-    if (metadata.linked[payload.projectId]) {
-        return htm`<Box><Button small action="unlink">Unlink From Project</Button>${notice}</Box>`;
-    }
-
-    return htm`<Box><Button small action="link">Link To Project</Button>${notice}</Box>`;
-};

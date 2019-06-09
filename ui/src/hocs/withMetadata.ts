@@ -1,7 +1,9 @@
 import {IncomingMessage, ServerResponse} from 'http';
+
 import {RequestHandler, send} from 'micro';
 import * as parseQuery from 'micro-query';
-import Metadata from '../types/metadata';
+
+import Metadata from '../types/Metadata';
 import getMetadata from '../utils/getMetadata';
 
 export interface RequestWithMetadata extends IncomingMessage {

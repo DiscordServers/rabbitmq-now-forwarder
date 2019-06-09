@@ -5,7 +5,7 @@
     "regions": ["all"],
     "version": 2,
     "builds": [
-        {"src": "ui/src/{pages,api}/**/*.ts", "use": "@now/node"}
+        {"src": "ui/src/router.ts", "use": "@now/node"}
     ],
     "env": {
         "ZEIT_CLIENT_ID": "@zeit_client_id",
@@ -19,6 +19,6 @@
         {"src": "/getPublicKey/(.*)", "dest": "ui/src/api/getPublicKey.ts?configurationId=$1"},
         {"src": "/regenerateKey/(.*)", "dest": "ui/src/api/regenerateKey.ts?configurationId=$1"},
         {"src": "/callback", "dest": "ui/src/api/callback.ts"},
-        {"src": "/", "dest": "ui/src/pages/index.ts"}
+        {"src": "/", "dest": "ui/src/router.ts"}
     ]
 }

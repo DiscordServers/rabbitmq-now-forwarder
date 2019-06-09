@@ -1,11 +1,12 @@
 import {HandlerOptions} from '@zeit/integration-utils/lib';
-import nowMetadata from '../types/metadata';
+
+import Metadata from '../types/Metadata';
 
 type action = 'link' | 'unlink';
 
 export default async function manageLink(
     handler: HandlerOptions,
-    metadata: nowMetadata,
+    metadata: Metadata,
     publicKey: string,
     action: action,
 ) {
