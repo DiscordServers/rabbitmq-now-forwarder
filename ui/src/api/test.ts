@@ -3,7 +3,7 @@ import {json, send} from 'micro';
 import * as NodeRSA from 'node-rsa';
 
 const getKey = () => {
-    return new NodeRSA(process.env.RABBIT_FORWARDER_PUBLIC_KEY);
+    return new NodeRSA(process.env.RABBIT_FORWARDER_PUBLIC_KEY || require('../../../test_keys.json').public);
 };
 
 export default async function(req: IncomingMessage, res: ServerResponse) {

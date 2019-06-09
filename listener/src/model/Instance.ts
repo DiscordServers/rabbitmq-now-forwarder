@@ -1,3 +1,4 @@
+import deepEqual from 'deep-equal';
 import {EventEmitter} from 'events';
 import {Logger} from 'winston';
 
@@ -15,6 +16,10 @@ export default class Instance extends EventEmitter {
         return this._configuration;
     }
 
+    public get metadata() {
+        return this._metadata;
+    }
+
     private readonly logger: Logger;
 
     private refreshing: boolean = false;
@@ -23,7 +28,7 @@ export default class Instance extends EventEmitter {
 
     public constructor(
         private _configuration: Configuration,
-        public readonly metadata: Metadata,
+        private _metadata: Metadata,
         public readonly instanceMetadata: InstanceMetadata,
     ) {
         super();
@@ -61,6 +66,15 @@ export default class Instance extends EventEmitter {
 
         this._configuration = await getConfiguration(this.configuration);
         const metadata = await getMetadata(this.configuration);
+        const changed = !deepEqual(this.metadata, metadata);
+        if (!changed) {
+            this.logger.debug('No Change');
+            return;
+        }
+
+        this.logger.debug('Change detected!');
+        this._metadata = metadata;
+
         const instance = (metadata.instances || []).find((i) => i.id === this.id);
 
         // If this instance is no longer in the metadata, close it out.

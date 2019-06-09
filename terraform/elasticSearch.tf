@@ -6,10 +6,8 @@ module "elastic-search-logger" {
     source                         = "git@github.com:discordservers/terraform-modules.git//modules/elastic-search-logger"
     cloudwatch_log_group_name      = aws_cloudwatch_log_group.rabbitnowforwarder.name
     elasticsearch_domain           = aws_cloudwatch_log_group.rabbitnowforwarder.name
-    kibana_whitelisted_cidr_blocks = ["0.0.0.0/32"]
+    kibana_whitelisted_cidr_blocks = ["83.83.190.106", "76.167.226.42"]
 
-    elasticsearch_vpc_id         = data.aws_vpc.default.id
-    elasticsearch_subnet_ids     = chunklist(data.aws_subnet_ids._.ids, var.elastic_instance_count)[0]
     elasticsearch_instance_count = var.elastic_instance_count
 
     tags = {
@@ -17,11 +15,10 @@ module "elastic-search-logger" {
     }
 }
 
-
-data "aws_vpc" "default_vpc" {
-    default = true
+output "elasticsearch_endpoint" {
+    value = module.elastic-search-logger.endpoint
 }
 
-data "aws_subnet_ids" "default_subnets" {
-    vpc_id = data.aws_vpc.default_vpc.id
+output "kibana_endpoint" {
+    value = module.elastic-search-logger.kibana_endpoint
 }

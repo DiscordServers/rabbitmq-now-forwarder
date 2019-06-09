@@ -39,10 +39,10 @@ const logger  = winston.createLogger({
 if (process.env.NODE_ENV === 'development') {
     logger.add(new winston.transports.Console({
         format: winston.format.combine(
-            winston.format.simple(),
             winston.format.padLevels(),
             winston.format.timestamp(),
             winston.format.colorize(),
+            winston.format.simple(),
             ...formats,
         ),
     }));
