@@ -25,6 +25,7 @@ export default class Instance extends EventEmitter {
     private refreshing: boolean = false;
     private queueListeners: Listener[] = [];
     private interval: NodeJS.Timeout;
+    private lastUpdate: number = 0;
 
     public constructor(
         private _configuration: Configuration,
@@ -67,12 +68,13 @@ export default class Instance extends EventEmitter {
         this._configuration = await getConfiguration(this.configuration);
         const metadata = await getMetadata(this.configuration);
         const changed = !deepEqual(this.metadata, metadata);
-        if (!changed) {
+        if (!changed && Date.now() - this.lastUpdate > 1000 * 60 * 15) {
             this.refreshing = false;
             this.logger.debug('No Change');
             return;
         }
 
+        this.lastUpdate = Date.now();
         this.logger.debug('Change detected!');
         this._metadata = metadata;
 
