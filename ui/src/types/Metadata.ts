@@ -11,6 +11,7 @@ export interface ListenerInterface {
 export interface InstanceInterface {
     id: string;
     name: string;
+    fqdn?: string;
     connection: {
         host: string;
         port: string;

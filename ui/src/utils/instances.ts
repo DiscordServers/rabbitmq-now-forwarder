@@ -53,7 +53,6 @@ export async function addInstance(instanceOptions: InstanceOptionsInterface, han
     metadata.publicKey  = await getGeneratedKey(handler.payload.configurationId);
     metadata.lastUpdate = Date.now();
 
-
     await metadata.save();
 
     return metadataInstance;

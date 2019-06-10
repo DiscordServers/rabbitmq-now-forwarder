@@ -2,7 +2,7 @@ import {IncomingMessage, ServerResponse} from 'http';
 import {stringify} from 'querystring';
 
 import {send} from 'micro';
-import * as parseQuery from 'micro-query';
+import parseQuery from 'micro-query';
 import fetch from 'node-fetch';
 
 import {generateKeys} from '../utils/generateKeys';
@@ -65,7 +65,7 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
 
     try {
         console.log('Saving to database');
-        const resp = await (await getCollection()).insertOne(document);
+        await (await getCollection()).insertOne(document);
         console.log('Saved to database', document);
 
         res.statusCode = 301;

@@ -5,6 +5,7 @@
     "regions": ["all"],
     "version": 2,
     "builds": [
+        {"src": "ui/src/api/*.ts", "use": "@now/node"},
         {"src": "ui/src/router.ts", "use": "@now/node"}
     ],
     "env": {

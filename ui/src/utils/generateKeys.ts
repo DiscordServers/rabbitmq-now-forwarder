@@ -1,4 +1,4 @@
-import * as keypair from 'keypair';
+import keypair from 'keypair';
 
 export interface Keys {
     publicKey: string;

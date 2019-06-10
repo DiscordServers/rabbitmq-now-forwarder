@@ -8,7 +8,7 @@ const getObjectPath = (metadata: Metadata, path: string, backTrack: boolean = fa
     return objectPath.get(metadata, backTrack ? path.substr(0, path.lastIndexOf('.')) : path);
 };
 
-const getDefaultMetadata = (): Metadata => {
+const getDefaultMetadata = (extra: any): Metadata => {
     return {
         isSetUp:     false,
         linked:      {},
@@ -19,15 +19,16 @@ const getDefaultMetadata = (): Metadata => {
             lastUpdate:         Date.now(),
         },
         lastUpdate:  Date.now(),
+        ...extra,
     };
 };
 
 const getObservableMetadata = async ({zeitClient}: HandlerOptions): Promise<Metadata> => {
     let metadata: Metadata = await zeitClient.getMetadata();
-    if (!metadata) {
-        metadata = getDefaultMetadata();
+    if (!metadata || metadata.isSetUp === undefined) {
+        metadata = getDefaultMetadata(metadata);
 
-        await metadata.save();
+        await zeitClient.setMetadata(metadata);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,7 +59,7 @@ const getObservableMetadata = async ({zeitClient}: HandlerOptions): Promise<Meta
         metadata.lastUpdate = Date.now();
     });
 
-    Object.defineProperty(observableMetadata, 'save', async () => zeitClient.setMetadata(observableMetadata));
+    observableMetadata.save = () => zeitClient.setMetadata(observableMetadata);
 
     return observableMetadata;
 };

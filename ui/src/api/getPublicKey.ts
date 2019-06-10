@@ -1,7 +1,7 @@
 import {IncomingMessage, ServerResponse} from 'http';
 
 import {send} from 'micro';
-import * as parseQuery from 'micro-query';
+import parseQuery from 'micro-query';
 
 import getCollection, {Configuration} from '../utils/getCollection';
 
