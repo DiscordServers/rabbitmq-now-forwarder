@@ -30,7 +30,7 @@
     "homepage": "https://github.com/DiscordServers/rabbitmq-now-forwarder#readme",
     "dependencies": {
         "@zeit/integration-utils": "^0.6.1",
-        "keypair": "^1.0.1",
+        "keypair": "^1.0.4",
         "micro": "^9.3.4",
         "micro-query": "^0.3.0",
         "mongodb": "^3.2.6",
