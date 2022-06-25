@@ -38,7 +38,7 @@
         "deep-equal": "^1.0.1",
         "micro": "^9.3.4",
         "mongodb": "^3.2.6",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.7",
         "node-os-utils": "^1.0.7",
         "node-rsa": "^1.0.5",
         "node-ses": "^2.2.1",
