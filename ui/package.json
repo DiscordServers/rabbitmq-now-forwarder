@@ -34,7 +34,7 @@
         "micro": "^9.3.4",
         "micro-query": "^0.3.0",
         "mongodb": "^3.2.6",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.7",
         "node-rsa": "^1.0.5",
         "uuid": "^3.3.2"
     },
