@@ -45,7 +45,7 @@
         "object-hash": "^1.3.1",
         "ts-node-dev": "^1.0.0-pre.39",
         "winston": "^3.2.1",
-        "winston-cloudwatch": "^2.0.5"
+        "winston-cloudwatch": "^6.1.1"
     },
     "devDependencies": {
         "@types/amqplib": "^0.5.12",
